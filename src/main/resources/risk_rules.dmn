@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="risk_rules" name="risk rules" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <decision id="risk_rules_desicion" name="risk  rules desicion" camunda:historyTimeToLive="180">
+    <decisionTable id="DecisionTable_127f2lx">
+      <input id="Input_1" biodi:width="357">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>current_step</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0ycsyp4">
+        <inputExpression id="LiteralExpression_14tro82" typeRef="string">
+          <text>action_code</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" name="next_step" typeRef="string" biodi:width="403" />
+      <rule id="DecisionRule_1oudmd3">
+        <inputEntry id="UnaryTests_02ctuie">
+          <text>"OWNER_RISK_ANALYSIS"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_05a7od8">
+          <text>"submit"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ry1p24">
+          <text>"MANAGER_RISK_ANALYSIS"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1fdaogz">
+        <inputEntry id="UnaryTests_0wu0zsr">
+          <text>"MANAGER_RISK_ANALYSIS"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1w8nz9j">
+          <text>"return_to_owner"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_17pt1bz">
+          <text>"OWNER_RISK_ANALYSIS"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0zjyv83">
+        <inputEntry id="UnaryTests_1q6ylab">
+          <text>"MANAGER_RISK_ANALYSIS"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0wu4c0p">
+          <text>"send_to_reject"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ribbem">
+          <text>"EXECUTIVE_DIRECTOR_RISK_ANALYSIS"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ro2r9v">
+        <inputEntry id="UnaryTests_0zkcphl">
+          <text>"MANAGER_RISK_ANALYSIS"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1lohjma">
+          <text>"accept"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0d9nzyw">
+          <text>"OWNER_RESPONDING_TO_RISK"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ea3jp6">
+        <inputEntry id="UnaryTests_0fv1p3h">
+          <text>"EXECUTIVE_DIRECTOR_RISK_ANALYSIS"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1yzlu73">
+          <text>"reject"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0hnlxya">
+          <text>"MANAGER_RISK_ANALYSIS"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1317biu">
+        <inputEntry id="UnaryTests_0ad6scf">
+          <text>"EXECUTIVE_DIRECTOR_RISK_ANALYSIS"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04alrkf">
+          <text>"accept"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0sviv8x">
+          <text>"RISK_REJECTION"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0jvl9vs">
+        <inputEntry id="UnaryTests_0y71s5r">
+          <text>"OWNER_RESPONDING_TO_RISK"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_08vhmxs">
+          <text>"submit"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_108b584">
+          <text>"MANAGER_RESPONDING_TO_RISK"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_13xvx20">
+        <inputEntry id="UnaryTests_1xtza6s">
+          <text>"MANAGER_RESPONDING_TO_RISK"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0a95xv4">
+          <text>"accept"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1mx1djw">
+          <text>"OWNER_REVIEW_AND_MONITORING"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_15e92ah">
+        <inputEntry id="UnaryTests_1mrcs5w">
+          <text>"MANAGER_RESPONDING_TO_RISK"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1l8ahw7">
+          <text>"decrease"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0zxd46m">
+          <text>"OWNER_REDUCTION"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0ai4i7q">
+        <inputEntry id="UnaryTests_1wo5xtn">
+          <text>"MANAGER_RESPONDING_TO_RISK"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1dr2ux4">
+          <text>"reject"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0gll0wc">
+          <text>"OWNER_RESPONDING_TO_RISK"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0c29q75">
+        <inputEntry id="UnaryTests_0fj4sbk">
+          <text>"MANAGER_RESPONDING_TO_RISK"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0hhpcnh">
+          <text>"transfer"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_184vusy">
+          <text>"OWNER_RESPONDING_TO_RISK"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0dh4c1a">
+        <inputEntry id="UnaryTests_1rouavo">
+          <text>"OWNER_REVIEW_AND_MONITORING"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0wg8pn2">
+          <text>"submit"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_03zpkko">
+          <text>"MANAGER_REVIEW_AND_MONITORING"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0yesw0j">
+        <inputEntry id="UnaryTests_028af9r">
+          <text>"OWNER_REDUCTION"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16jxgg0">
+          <text>"submit"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_092jxbj">
+          <text>"MANAGER_REVIEW_AND_MONITORING"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0h5dzb2">
+        <inputEntry id="UnaryTests_1khwaki">
+          <text>"MANAGER_REVIEW_AND_MONITORING"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_039zmrb">
+          <text>"reject"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_05swp63">
+          <text>"OWNER_REVIEW_AND_MONITORING"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_06bje3j">
+        <inputEntry id="UnaryTests_12554ke">
+          <text>"MANAGER_REVIEW_AND_MONITORING"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_195e151">
+          <text>"accept"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0tko3mg">
+          <text>"OWNER_CLOSE_DANGER"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1djt8bn">
+        <inputEntry id="UnaryTests_0wckdxx">
+          <text>"OWNER_CLOSE_DANGER"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1su6ytl">
+          <text>"submit"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1kz3buq">
+          <text>"MANAGER_CLOSE_DANGER"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0kpt9qy">
+        <inputEntry id="UnaryTests_04jxr7v">
+          <text>"MANAGER_CLOSE_DANGER"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0pga8qh">
+          <text>"accept"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_15td9ih">
+          <text>"CLOSED_DANGER"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1bvb3st">
+        <inputEntry id="UnaryTests_0ryp540">
+          <text>"MANAGER_CLOSE_DANGER"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_15fh063">
+          <text>"reject"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_05lhwim">
+          <text>"CONSTANT_DANGER"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="risk_rules_desicion">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0tmtop1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <bpmn:process id="RISK" name="risk" isExecutable="true" camunda:historyTimeToLive="180">
+    <bpmn:userTask id="OWNER_RISK_ANALYSIS" name="المالك - تحليل وتقييم الخطر" camunda:assignee="${owner}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="owner" label="owner" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1rxakim</bpmn:incoming>
+      <bpmn:incoming>Flow_1ysoc2m</bpmn:incoming>
+      <bpmn:outgoing>Flow_1co4wre</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="Event_0rczpsx">
+      <bpmn:outgoing>Flow_1rxakim</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1rxakim" sourceRef="Event_0rczpsx" targetRef="OWNER_RISK_ANALYSIS" />
+    <bpmn:userTask id="MANAGER_RISK_ANALYSIS" name="مدير المخاطر - تحليل وتقييم الخطر" camunda:assignee="${manager}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="action" label="action" type="string" />
+          <camunda:formField id="manager" label="manager" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1co4wre</bpmn:incoming>
+      <bpmn:incoming>Flow_0q5abyt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0kw8p1k</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1co4wre" sourceRef="OWNER_RISK_ANALYSIS" targetRef="MANAGER_RISK_ANALYSIS" />
+    <bpmn:exclusiveGateway id="Gateway_117ipaa">
+      <bpmn:incoming>Flow_0kw8p1k</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ysoc2m</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1aty0oj</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1a1hu6o</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0kw8p1k" sourceRef="MANAGER_RISK_ANALYSIS" targetRef="Gateway_117ipaa" />
+    <bpmn:sequenceFlow id="Flow_1ysoc2m" sourceRef="Gateway_117ipaa" targetRef="OWNER_RISK_ANALYSIS">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'return_to_owner'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="EXECUTIVE_DIRECTOR_RISK_ANALYSIS" name="المدير التنفيذى - تحليل وتقييم الخطر" camunda:assignee="EXECUTIVE_DIRECTOR">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="action" label="action" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1aty0oj</bpmn:incoming>
+      <bpmn:outgoing>Flow_00mm091</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1aty0oj" sourceRef="Gateway_117ipaa" targetRef="EXECUTIVE_DIRECTOR_RISK_ANALYSIS">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'send_to_reject'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_1v5czil">
+      <bpmn:incoming>Flow_00mm091</bpmn:incoming>
+      <bpmn:outgoing>Flow_0q5abyt</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ueub2a</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_00mm091" sourceRef="EXECUTIVE_DIRECTOR_RISK_ANALYSIS" targetRef="Gateway_1v5czil" />
+    <bpmn:sequenceFlow id="Flow_0q5abyt" sourceRef="Gateway_1v5czil" targetRef="MANAGER_RISK_ANALYSIS">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_1ce53gf">
+      <bpmn:incoming>Flow_1ueub2a</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ueub2a" sourceRef="Gateway_1v5czil" targetRef="Event_1ce53gf">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="OWNER_RESPONDING_TO_RISK" name="المالك - مرحلة الإستجابة للخطر&#10;" camunda:assignee="${owner}">
+      <bpmn:incoming>Flow_1a1hu6o</bpmn:incoming>
+      <bpmn:incoming>Flow_1kmvnzg</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lmbfsh</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1a1hu6o" sourceRef="Gateway_117ipaa" targetRef="OWNER_RESPONDING_TO_RISK">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="MANAGER_RESPONDING_TO_RISK" name="مدير المخاطر  - مرحلة الإستجابة للخطر" camunda:assignee="${manager}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="action" label="action" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1lmbfsh</bpmn:incoming>
+      <bpmn:outgoing>Flow_0adu4fb</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1lmbfsh" sourceRef="OWNER_RESPONDING_TO_RISK" targetRef="MANAGER_RESPONDING_TO_RISK" />
+    <bpmn:exclusiveGateway id="Gateway_1nrzb3q">
+      <bpmn:incoming>Flow_0adu4fb</bpmn:incoming>
+      <bpmn:outgoing>Flow_1kmvnzg</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1kbcbt3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_06a1qoa</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0adu4fb" sourceRef="MANAGER_RESPONDING_TO_RISK" targetRef="Gateway_1nrzb3q" />
+    <bpmn:sequenceFlow id="Flow_1kmvnzg" sourceRef="Gateway_1nrzb3q" targetRef="OWNER_RESPONDING_TO_RISK">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject' || action == 'transfer'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="OWNER_REVIEW_AND_MONITORING" name="المالك - مرحلة المراجعة والمراقبة" camunda:assignee="${owner}">
+      <bpmn:incoming>Flow_1kbcbt3</bpmn:incoming>
+      <bpmn:incoming>Flow_18iwwq1</bpmn:incoming>
+      <bpmn:outgoing>Flow_00svqh1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1kbcbt3" sourceRef="Gateway_1nrzb3q" targetRef="OWNER_REVIEW_AND_MONITORING">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="MANAGER_REVIEW_AND_MONITORING" name="مدير المخاطر  - مرحلة المراجعة والمراقبة" camunda:assignee="${manager}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="action" label="action" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_00svqh1</bpmn:incoming>
+      <bpmn:incoming>Flow_0ixl864</bpmn:incoming>
+      <bpmn:outgoing>Flow_1smg7m1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_00svqh1" sourceRef="OWNER_REVIEW_AND_MONITORING" targetRef="MANAGER_REVIEW_AND_MONITORING" />
+    <bpmn:exclusiveGateway id="Gateway_1pmjnk4">
+      <bpmn:incoming>Flow_1smg7m1</bpmn:incoming>
+      <bpmn:outgoing>Flow_18iwwq1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_00vpxr0</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1smg7m1" sourceRef="MANAGER_REVIEW_AND_MONITORING" targetRef="Gateway_1pmjnk4" />
+    <bpmn:sequenceFlow id="Flow_18iwwq1" sourceRef="Gateway_1pmjnk4" targetRef="OWNER_REVIEW_AND_MONITORING">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="OWNER_CLOSE_DANGER" name="المالك - مرحلة إغلاق الخطر" camunda:assignee="${owner}">
+      <bpmn:incoming>Flow_00vpxr0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0tfvg9q</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_00vpxr0" sourceRef="Gateway_1pmjnk4" targetRef="OWNER_CLOSE_DANGER">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="MANAGER_CLOSE_DANGER" name="مدير المخاطر  - مرحلة إغلاق الخطر" camunda:assignee="${manager}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="action" label="action" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0tfvg9q</bpmn:incoming>
+      <bpmn:outgoing>Flow_0i552nx</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0tfvg9q" sourceRef="OWNER_CLOSE_DANGER" targetRef="MANAGER_CLOSE_DANGER" />
+    <bpmn:exclusiveGateway id="Gateway_16rcibm">
+      <bpmn:incoming>Flow_0i552nx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1u02t3h</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0x7v6vn</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0i552nx" sourceRef="MANAGER_CLOSE_DANGER" targetRef="Gateway_16rcibm" />
+    <bpmn:endEvent id="Event_0uniy34">
+      <bpmn:incoming>Flow_1u02t3h</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1u02t3h" sourceRef="Gateway_16rcibm" targetRef="Event_0uniy34">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_19gtmpy">
+      <bpmn:incoming>Flow_0x7v6vn</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0x7v6vn" sourceRef="Gateway_16rcibm" targetRef="Event_19gtmpy">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:userTask id="OWNER_REDUCTION" name="المالك - مرحلة التخفيض" camunda:assignee="${owner}">
+      <bpmn:incoming>Flow_06a1qoa</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ixl864</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0ixl864" sourceRef="OWNER_REDUCTION" targetRef="MANAGER_REVIEW_AND_MONITORING" />
+    <bpmn:sequenceFlow id="Flow_06a1qoa" sourceRef="Gateway_1nrzb3q" targetRef="OWNER_REDUCTION">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'decrease'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:textAnnotation id="TextAnnotation_1q41ast">
+      <bpmn:text>قبول</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_10kakkt" sourceRef="Event_19gtmpy" targetRef="TextAnnotation_1q41ast" />
+    <bpmn:textAnnotation id="TextAnnotation_0duo3mr">
+      <bpmn:text>رفض</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_14jlquh" sourceRef="Event_0uniy34" targetRef="TextAnnotation_0duo3mr" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="RISK">
+      <bpmndi:BPMNShape id="Activity_0hyyp1y_di" bpmnElement="OWNER_RISK_ANALYSIS">
+        <dc:Bounds x="290" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rczpsx_di" bpmnElement="Event_0rczpsx">
+        <dc:Bounds x="182" y="262" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dawag0_di" bpmnElement="MANAGER_RISK_ANALYSIS">
+        <dc:Bounds x="470" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_117ipaa_di" bpmnElement="Gateway_117ipaa" isMarkerVisible="true">
+        <dc:Bounds x="655" y="255" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vom1fi_di" bpmnElement="EXECUTIVE_DIRECTOR_RISK_ANALYSIS">
+        <dc:Bounds x="630" y="430" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1v5czil_di" bpmnElement="Gateway_1v5czil" isMarkerVisible="true">
+        <dc:Bounds x="495" y="445" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ce53gf_di" bpmnElement="Event_1ce53gf">
+        <dc:Bounds x="372" y="452" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vn3fwo_di" bpmnElement="OWNER_RESPONDING_TO_RISK">
+        <dc:Bounds x="800" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0e1h8cz_di" bpmnElement="MANAGER_RESPONDING_TO_RISK">
+        <dc:Bounds x="980" y="240" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1nrzb3q_di" bpmnElement="Gateway_1nrzb3q" isMarkerVisible="true">
+        <dc:Bounds x="1135" y="255" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0er0lj2_di" bpmnElement="OWNER_REVIEW_AND_MONITORING">
+        <dc:Bounds x="1340" y="140" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0sljsu5_di" bpmnElement="MANAGER_REVIEW_AND_MONITORING">
+        <dc:Bounds x="1520" y="140" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1pmjnk4_di" bpmnElement="Gateway_1pmjnk4" isMarkerVisible="true">
+        <dc:Bounds x="1715" y="155" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02ikk3i_di" bpmnElement="OWNER_CLOSE_DANGER">
+        <dc:Bounds x="1810" y="140" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hz70vr_di" bpmnElement="MANAGER_CLOSE_DANGER">
+        <dc:Bounds x="1990" y="140" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_16rcibm_di" bpmnElement="Gateway_16rcibm" isMarkerVisible="true">
+        <dc:Bounds x="2145" y="155" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0uniy34_di" bpmnElement="Event_0uniy34">
+        <dc:Bounds x="2252" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_19gtmpy_di" bpmnElement="Event_19gtmpy">
+        <dc:Bounds x="2152" y="62" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vi6km4_di" bpmnElement="OWNER_REDUCTION">
+        <dc:Bounds x="1330" y="400" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1q41ast_di" bpmnElement="TextAnnotation_1q41ast">
+        <dc:Bounds x="2220" y="60" width="99.99999794078421" height="29.993252876477367" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0duo3mr_di" bpmnElement="TextAnnotation_0duo3mr">
+        <dc:Bounds x="2340" y="165" width="99.99999794078421" height="29.993252876477367" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1rxakim_di" bpmnElement="Flow_1rxakim">
+        <di:waypoint x="218" y="280" />
+        <di:waypoint x="290" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1co4wre_di" bpmnElement="Flow_1co4wre">
+        <di:waypoint x="390" y="280" />
+        <di:waypoint x="470" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0kw8p1k_di" bpmnElement="Flow_0kw8p1k">
+        <di:waypoint x="570" y="280" />
+        <di:waypoint x="655" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ysoc2m_di" bpmnElement="Flow_1ysoc2m">
+        <di:waypoint x="680" y="255" />
+        <di:waypoint x="680" y="140" />
+        <di:waypoint x="340" y="140" />
+        <di:waypoint x="340" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1aty0oj_di" bpmnElement="Flow_1aty0oj">
+        <di:waypoint x="680" y="305" />
+        <di:waypoint x="680" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00mm091_di" bpmnElement="Flow_00mm091">
+        <di:waypoint x="630" y="470" />
+        <di:waypoint x="545" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q5abyt_di" bpmnElement="Flow_0q5abyt">
+        <di:waypoint x="520" y="445" />
+        <di:waypoint x="520" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ueub2a_di" bpmnElement="Flow_1ueub2a">
+        <di:waypoint x="495" y="470" />
+        <di:waypoint x="408" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a1hu6o_di" bpmnElement="Flow_1a1hu6o">
+        <di:waypoint x="705" y="280" />
+        <di:waypoint x="800" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lmbfsh_di" bpmnElement="Flow_1lmbfsh">
+        <di:waypoint x="900" y="280" />
+        <di:waypoint x="980" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0adu4fb_di" bpmnElement="Flow_0adu4fb">
+        <di:waypoint x="1080" y="280" />
+        <di:waypoint x="1135" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kmvnzg_di" bpmnElement="Flow_1kmvnzg">
+        <di:waypoint x="1160" y="255" />
+        <di:waypoint x="1160" y="150" />
+        <di:waypoint x="850" y="150" />
+        <di:waypoint x="850" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kbcbt3_di" bpmnElement="Flow_1kbcbt3">
+        <di:waypoint x="1185" y="280" />
+        <di:waypoint x="1250" y="280" />
+        <di:waypoint x="1250" y="180" />
+        <di:waypoint x="1340" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00svqh1_di" bpmnElement="Flow_00svqh1">
+        <di:waypoint x="1440" y="180" />
+        <di:waypoint x="1520" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1smg7m1_di" bpmnElement="Flow_1smg7m1">
+        <di:waypoint x="1620" y="180" />
+        <di:waypoint x="1715" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18iwwq1_di" bpmnElement="Flow_18iwwq1">
+        <di:waypoint x="1740" y="155" />
+        <di:waypoint x="1740" y="80" />
+        <di:waypoint x="1390" y="80" />
+        <di:waypoint x="1390" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00vpxr0_di" bpmnElement="Flow_00vpxr0">
+        <di:waypoint x="1765" y="180" />
+        <di:waypoint x="1810" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tfvg9q_di" bpmnElement="Flow_0tfvg9q">
+        <di:waypoint x="1910" y="180" />
+        <di:waypoint x="1990" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i552nx_di" bpmnElement="Flow_0i552nx">
+        <di:waypoint x="2090" y="180" />
+        <di:waypoint x="2145" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1u02t3h_di" bpmnElement="Flow_1u02t3h">
+        <di:waypoint x="2195" y="180" />
+        <di:waypoint x="2252" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0x7v6vn_di" bpmnElement="Flow_0x7v6vn">
+        <di:waypoint x="2170" y="155" />
+        <di:waypoint x="2170" y="98" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ixl864_di" bpmnElement="Flow_0ixl864">
+        <di:waypoint x="1380" y="400" />
+        <di:waypoint x="1380" y="290" />
+        <di:waypoint x="1570" y="290" />
+        <di:waypoint x="1570" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06a1qoa_di" bpmnElement="Flow_06a1qoa">
+        <di:waypoint x="1160" y="305" />
+        <di:waypoint x="1160" y="440" />
+        <di:waypoint x="1330" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_10kakkt_di" bpmnElement="Association_10kakkt">
+        <di:waypoint x="2190" y="80" />
+        <di:waypoint x="2220" y="78" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_14jlquh_di" bpmnElement="Association_14jlquh">
+        <di:waypoint x="2288" y="180" />
+        <di:waypoint x="2340" y="180" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
