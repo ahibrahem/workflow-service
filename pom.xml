@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>rmg.workflow</groupId>
-    <artifactId>Workflow_Management_Service</artifactId>
+    <artifactId>Workflow-Management-Service</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
