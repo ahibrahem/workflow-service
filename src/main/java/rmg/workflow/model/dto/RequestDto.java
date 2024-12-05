@@ -11,8 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 public class RequestDto {
 
-    private Long requestId;
-    private String requestNo;
+    private Long id;
     private Long riskId;
+    private String requestNo;
     private List<processInfoDto> processInfoList;
+    private List<RequestHistoryDto> requestHistoryList;
+    private ServiceStepsDto serviceStep;
 }

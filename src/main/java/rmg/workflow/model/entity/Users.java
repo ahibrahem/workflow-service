@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "ACT_USERS")
 @Getter
 @Setter
 public class Users implements Serializable {
@@ -18,8 +18,8 @@ public class Users implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "user_name")
     private String userName;

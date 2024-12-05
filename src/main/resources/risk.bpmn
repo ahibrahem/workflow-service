@@ -35,7 +35,7 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0kw8p1k" sourceRef="MANAGER_RISK_ANALYSIS" targetRef="Gateway_117ipaa" />
     <bpmn:sequenceFlow id="Flow_1ysoc2m" sourceRef="Gateway_117ipaa" targetRef="OWNER_RISK_ANALYSIS">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'return_to_owner'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'RETURN_TO_OWNER'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="EXECUTIVE_DIRECTOR_RISK_ANALYSIS" name="المدير التنفيذى - تحليل وتقييم الخطر" camunda:assignee="EXECUTIVE_DIRECTOR">
       <bpmn:extensionElements>
@@ -47,7 +47,7 @@
       <bpmn:outgoing>Flow_00mm091</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1aty0oj" sourceRef="Gateway_117ipaa" targetRef="EXECUTIVE_DIRECTOR_RISK_ANALYSIS">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'send_to_reject'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'SEND_TO_REJECT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="Gateway_1v5czil">
       <bpmn:incoming>Flow_00mm091</bpmn:incoming>
@@ -56,21 +56,21 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_00mm091" sourceRef="EXECUTIVE_DIRECTOR_RISK_ANALYSIS" targetRef="Gateway_1v5czil" />
     <bpmn:sequenceFlow id="Flow_0q5abyt" sourceRef="Gateway_1v5czil" targetRef="MANAGER_RISK_ANALYSIS">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'REJECT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="Event_1ce53gf">
       <bpmn:incoming>Flow_1ueub2a</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1ueub2a" sourceRef="Gateway_1v5czil" targetRef="Event_1ce53gf">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'ACCEPT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="OWNER_RESPONDING_TO_RISK" name="المالك - مرحلة الإستجابة للخطر&#10;" camunda:assignee="${owner}">
+    <bpmn:userTask id="OWNER_RESPONDING_TO_RISK" name="المالك - مرحلة الإستجابة للخطر" camunda:assignee="${owner}">
       <bpmn:incoming>Flow_1a1hu6o</bpmn:incoming>
       <bpmn:incoming>Flow_1kmvnzg</bpmn:incoming>
       <bpmn:outgoing>Flow_1lmbfsh</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1a1hu6o" sourceRef="Gateway_117ipaa" targetRef="OWNER_RESPONDING_TO_RISK">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'ACCEPT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="MANAGER_RESPONDING_TO_RISK" name="مدير المخاطر  - مرحلة الإستجابة للخطر" camunda:assignee="${manager}">
       <bpmn:extensionElements>
@@ -90,7 +90,7 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0adu4fb" sourceRef="MANAGER_RESPONDING_TO_RISK" targetRef="Gateway_1nrzb3q" />
     <bpmn:sequenceFlow id="Flow_1kmvnzg" sourceRef="Gateway_1nrzb3q" targetRef="OWNER_RESPONDING_TO_RISK">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject' || action == 'transfer'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'REJECT' || action == 'TRANSFER'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="OWNER_REVIEW_AND_MONITORING" name="المالك - مرحلة المراجعة والمراقبة" camunda:assignee="${owner}">
       <bpmn:incoming>Flow_1kbcbt3</bpmn:incoming>
@@ -98,7 +98,7 @@
       <bpmn:outgoing>Flow_00svqh1</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1kbcbt3" sourceRef="Gateway_1nrzb3q" targetRef="OWNER_REVIEW_AND_MONITORING">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'ACCEPT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="MANAGER_REVIEW_AND_MONITORING" name="مدير المخاطر  - مرحلة المراجعة والمراقبة" camunda:assignee="${manager}">
       <bpmn:extensionElements>
@@ -118,14 +118,14 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_1smg7m1" sourceRef="MANAGER_REVIEW_AND_MONITORING" targetRef="Gateway_1pmjnk4" />
     <bpmn:sequenceFlow id="Flow_18iwwq1" sourceRef="Gateway_1pmjnk4" targetRef="OWNER_REVIEW_AND_MONITORING">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'REJECT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="OWNER_CLOSE_DANGER" name="المالك - مرحلة إغلاق الخطر" camunda:assignee="${owner}">
       <bpmn:incoming>Flow_00vpxr0</bpmn:incoming>
       <bpmn:outgoing>Flow_0tfvg9q</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_00vpxr0" sourceRef="Gateway_1pmjnk4" targetRef="OWNER_CLOSE_DANGER">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'ACCEPT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="MANAGER_CLOSE_DANGER" name="مدير المخاطر  - مرحلة إغلاق الخطر" camunda:assignee="${manager}">
       <bpmn:extensionElements>
@@ -147,13 +147,13 @@
       <bpmn:incoming>Flow_1u02t3h</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1u02t3h" sourceRef="Gateway_16rcibm" targetRef="Event_0uniy34">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'REJECT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="Event_19gtmpy">
       <bpmn:incoming>Flow_0x7v6vn</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0x7v6vn" sourceRef="Gateway_16rcibm" targetRef="Event_19gtmpy">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'ACCEPT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="OWNER_REDUCTION" name="المالك - مرحلة التخفيض" camunda:assignee="${owner}">
       <bpmn:incoming>Flow_06a1qoa</bpmn:incoming>
@@ -161,7 +161,7 @@
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_0ixl864" sourceRef="OWNER_REDUCTION" targetRef="MANAGER_REVIEW_AND_MONITORING" />
     <bpmn:sequenceFlow id="Flow_06a1qoa" sourceRef="Gateway_1nrzb3q" targetRef="OWNER_REDUCTION">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'decrease'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'DECREASE'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:textAnnotation id="TextAnnotation_1q41ast">
       <bpmn:text>قبول</bpmn:text>

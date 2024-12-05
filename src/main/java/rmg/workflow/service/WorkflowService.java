@@ -1,8 +1,6 @@
 package rmg.workflow.service;
 
 import lombok.RequiredArgsConstructor;
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.ProcessEngines;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +13,12 @@ import rmg.workflow.model.dto.RequestDto;
 import rmg.workflow.model.dto.RiskDto;
 import rmg.workflow.model.entity.ProcessInfo;
 import rmg.workflow.model.entity.Requests;
+import rmg.workflow.model.entity.ServiceSteps;
 import rmg.workflow.repository.ProcessInfoRepository;
 import rmg.workflow.repository.RequestsRepository;
 import rmg.workflow.repository.ServiceStepsRepository;
 import rmg.workflow.util.CamundaUtil;
+import rmg.workflow.util.CommonUtil;
 import rmg.workflow.util.ConstantString;
 
 import java.util.*;
@@ -29,9 +29,10 @@ public class WorkflowService {
 
     private final RequestsRepository requestsRepository;
     private final ServiceStepsRepository serviceStepsRepository;
-    private final ProcessInfoRepository processInfoRepository;
     private final CamundaUtil camundaUtil;
     private final RequestMapper requestMapper;
+    private final CommonUtil commonUtil;
+    private final ProcessInfoRepository processInfoRepository;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -41,17 +42,17 @@ public class WorkflowService {
 
         Requests request = camundaUtil.initRequestObject(ConstantString.RISK_SERVICE, CamundaSteps.OWNER_RISK_ANALYSIS.getValue(), riskDto.getRiskId());
 
-        preparedRequestData(request, riskDto);
+        commonUtil.preparedRequestData(request, riskDto);
         Requests savedRequest = requestsRepository.save(request);
 
         Map<String, Object> processVars = new HashMap<>();
-        processVars.put("manager", savedRequest.getRiskManagerCode());
-        processVars.put("owner", savedRequest.getRiskOwnerCode());
+        processVars.put(ConstantString.MANAGER, savedRequest.getRiskManagerCode());
+        processVars.put(ConstantString.OWNER, savedRequest.getRiskOwnerCode());
         Task task = camundaUtil.startProcess(processVars);
 
-        ProcessInfo processInfo = camundaUtil.preparedProcessInfo(savedRequest, task);
-        processInfoRepository.save(processInfo);
-
+        commonUtil.preparedProcessInfo(savedRequest, task);
+        commonUtil.preparedRequestHistory(savedRequest.getId(), riskDto.getNotes());
+        commonUtil.addNewRequestSla(savedRequest.getId(), task.getId(), task.getAssignee());
         return "process started";
     }
 
@@ -61,19 +62,11 @@ public class WorkflowService {
             ArrayList<String> endingStepList = new ArrayList<>(List.of(CamundaSteps.CONSTANT_DANGER.getValue(),
                     CamundaSteps.CLOSED_DANGER.getValue(), CamundaSteps.RISK_REJECTION.getValue()));
             for (Requests request : requestList) {
-                if (!endingStepList.contains(request.getServiceStep().getServiceStepCode())) {
+                if (!endingStepList.contains(request.getServiceStep().getStepCode())) {
                     throw new AppIllegalStateException("REQUEST_WITH_SAME_ID_IS_IN_PROGRESS");
                 }
             }
         }
-    }
-
-    private void preparedRequestData(Requests request, RiskDto riskDto) {
-        request.setRiskId(riskDto.getRiskId());
-        request.setRiskManagerId(riskDto.getRiskManagerId());
-        request.setRiskManagerCode(riskDto.getRiskManagerCode());
-        request.setRiskOwnerId(riskDto.getRiskOwnerId());
-        request.setRiskOwnerCode(riskDto.getRiskOwnerCode());
     }
 
 
@@ -87,11 +80,7 @@ public class WorkflowService {
         if (processInfo.getTaskId() == null) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }
-        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
-        Task task = processEngine.getTaskService().createTaskQuery().taskId(processInfo.getTaskId()).active().singleResult();
-        if (task == null || !processInfo.getTaskAssignee().equals(riskDto.getCurrentRole())) {
-            throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
-        }
+        camundaUtil.validateTaskIdAndAssignee(processInfo, riskDto.getCurrentRole());
         return requestMapper.toRequestDto(request);
     }
 
@@ -102,31 +91,37 @@ public class WorkflowService {
                 CamundaSteps.CLOSED_DANGER.getValue(), CamundaSteps.RISK_REJECTION.getValue()));
 
         camundaUtil.validateTaskHandling(completeDto.getTaskId());
-        Optional<Requests> requestsOptional = requestsRepository.findById(completeDto.getRequestId());
-        if (requestsOptional.isEmpty()) {
-            throw new NoDataFoundException("REQUEST_NOT_FOUND");
-        }
-        Requests request = requestsOptional.get();
 
-        if (!completeDto.getTaskId().equals(request.getProcessInfoList().get(0).getTaskId())) {
-            throw new NoDataFoundException("INVALID_REQUEST_ID_OR_TASK_ID");
-        }
+        Requests request = camundaUtil.validateRequestDataForComplete(endingStepList, completeDto);
+        ServiceSteps currentStep = request.getServiceStep();
+        String nextStep = camundaUtil.getProcessNextStep(request.getServiceStep().getStepCode(), completeDto.getAction(), ConstantString.RISK_RULES_DESICION);
+        request.setServiceStepId(serviceStepsRepository.findServiceStepsByStepCode(nextStep).getId());
 
-        if (endingStepList.contains(request.getServiceStep().getServiceStepCode())) {
-            throw new NoDataFoundException("INVALID_REQUEST_ID");
+        if (completeDto.getAction().equals("TRANSFER")) {
+            request.setRiskManagerCode(completeDto.getNewRiskManagerCode());
+            request.setRiskOwnerCode(completeDto.getNewRiskOwnerCode());
         }
-
-        String nextStep = camundaUtil.getProcessNextStep(request.getServiceStep().getServiceStepCode(), completeDto.getAction(), ConstantString.RISK_RULES_DESICION);
-        request.setServiceStepId(serviceStepsRepository.findServiceStepsByServiceStepCode(nextStep).getServiceStepId());
         requestsRepository.save(request);
 
         Map<String, Object> vars = new HashMap<>();
         vars.put(ConstantString.ACTION, completeDto.getAction());
+        if (completeDto.getAction().equals("TRANSFER")) {
+            vars.put(ConstantString.MANAGER, completeDto.getNewRiskManagerCode());
+            vars.put(ConstantString.OWNER, completeDto.getNewRiskOwnerCode());
+        }
 
         ProcessInfo processInfo = request.getProcessInfoList().get(0);
+        String currentTaskAssignee = request.getProcessInfoList().get(0).getTaskAssignee();
         camundaUtil.completeProcessTask(completeDto.getTaskId(),
                 processInfo, endingStepList, vars, nextStep);
 
+        commonUtil.preparedRequestHistory(request.getId(), currentTaskAssignee
+                , completeDto.getNotes(), currentStep.getId(), completeDto.getAction());
+
+        commonUtil.updateRequestSla(completeDto, currentTaskAssignee);
+        if (!endingStepList.contains(nextStep)) {
+            commonUtil.addNewRequestSla(completeDto.getRequestId(), processInfo.getTaskId(), processInfo.getTaskAssignee());
+        }
         processInfoRepository.save(processInfo);
         return "process was sent to next task";
     }

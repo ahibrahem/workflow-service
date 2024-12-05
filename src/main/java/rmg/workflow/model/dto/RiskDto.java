@@ -16,6 +16,7 @@ public class RiskDto {
     private String riskOwnerCode;
     private String riskManagerCode;
     private String currentRole;
+    private String notes;
 
 
 }

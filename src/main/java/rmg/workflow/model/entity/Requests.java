@@ -14,17 +14,15 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "requests")
+@Table(name = "ACT_REQUESTS")
 @Getter
 @Setter
 public class Requests implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "request_id")
-    private Long requestId;
-    @Column(name = "request_no")
-    private String requestNo;
+    @Column(name = "id")
+    private Long id;
     @Column(name = "service_id")
     private Long serviceId;
     @Column(name = "service_step_id")
@@ -43,17 +41,23 @@ public class Requests implements Serializable {
     @Column(name = "risk_id")
     private Long riskId;
 
+    @Column(name = "request_no")
+    private String requestNo;
 
     @JsonIgnore
-    @JoinColumn(name = "service_id", referencedColumnName = "service_id", insertable = false, updatable = false)
+    @JoinColumn(name = "service_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Services service;
 
-    @JsonIgnore
-    @JoinColumn(name = "service_step_id", referencedColumnName = "service_step_id", insertable = false, updatable = false)
+    //@JsonIgnore
+    @JoinColumn(name = "service_step_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ServiceSteps serviceStep;
 
     @OneToMany(mappedBy = "requestId", fetch = FetchType.LAZY)
     private List<ProcessInfo> processInfoList;
+
+    @OneToMany(mappedBy = "requestId", fetch = FetchType.LAZY)
+    private List<RequestHistory> requestHistoryList;
+
 }

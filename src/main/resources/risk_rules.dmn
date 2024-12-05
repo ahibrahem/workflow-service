@@ -18,7 +18,7 @@
           <text>"OWNER_RISK_ANALYSIS"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_05a7od8">
-          <text>"submit"</text>
+          <text>"SUBMIT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0ry1p24">
           <text>"MANAGER_RISK_ANALYSIS"</text>
@@ -29,7 +29,7 @@
           <text>"MANAGER_RISK_ANALYSIS"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_1w8nz9j">
-          <text>"return_to_owner"</text>
+          <text>"RETURN_TO_OWNER"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_17pt1bz">
           <text>"OWNER_RISK_ANALYSIS"</text>
@@ -40,7 +40,7 @@
           <text>"MANAGER_RISK_ANALYSIS"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_0wu4c0p">
-          <text>"send_to_reject"</text>
+          <text>"SEND_TO_REJECT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1ribbem">
           <text>"EXECUTIVE_DIRECTOR_RISK_ANALYSIS"</text>
@@ -51,7 +51,7 @@
           <text>"MANAGER_RISK_ANALYSIS"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_1lohjma">
-          <text>"accept"</text>
+          <text>"ACCEPT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0d9nzyw">
           <text>"OWNER_RESPONDING_TO_RISK"</text>
@@ -62,7 +62,7 @@
           <text>"EXECUTIVE_DIRECTOR_RISK_ANALYSIS"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_1yzlu73">
-          <text>"reject"</text>
+          <text>"REJECT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0hnlxya">
           <text>"MANAGER_RISK_ANALYSIS"</text>
@@ -73,7 +73,7 @@
           <text>"EXECUTIVE_DIRECTOR_RISK_ANALYSIS"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_04alrkf">
-          <text>"accept"</text>
+          <text>"ACCEPT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0sviv8x">
           <text>"RISK_REJECTION"</text>
@@ -84,7 +84,7 @@
           <text>"OWNER_RESPONDING_TO_RISK"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_08vhmxs">
-          <text>"submit"</text>
+          <text>"SUBMIT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_108b584">
           <text>"MANAGER_RESPONDING_TO_RISK"</text>
@@ -95,7 +95,7 @@
           <text>"MANAGER_RESPONDING_TO_RISK"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_0a95xv4">
-          <text>"accept"</text>
+          <text>"ACCEPT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1mx1djw">
           <text>"OWNER_REVIEW_AND_MONITORING"</text>
@@ -106,7 +106,7 @@
           <text>"MANAGER_RESPONDING_TO_RISK"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_1l8ahw7">
-          <text>"decrease"</text>
+          <text>"DECREASE"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0zxd46m">
           <text>"OWNER_REDUCTION"</text>
@@ -117,7 +117,7 @@
           <text>"MANAGER_RESPONDING_TO_RISK"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_1dr2ux4">
-          <text>"reject"</text>
+          <text>"REJECT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0gll0wc">
           <text>"OWNER_RESPONDING_TO_RISK"</text>
@@ -128,7 +128,7 @@
           <text>"MANAGER_RESPONDING_TO_RISK"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_0hhpcnh">
-          <text>"transfer"</text>
+          <text>"TRANSFER"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_184vusy">
           <text>"OWNER_RESPONDING_TO_RISK"</text>
@@ -139,7 +139,7 @@
           <text>"OWNER_REVIEW_AND_MONITORING"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_0wg8pn2">
-          <text>"submit"</text>
+          <text>"SUBMIT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_03zpkko">
           <text>"MANAGER_REVIEW_AND_MONITORING"</text>
@@ -150,7 +150,7 @@
           <text>"OWNER_REDUCTION"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_16jxgg0">
-          <text>"submit"</text>
+          <text>"SUBMIT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_092jxbj">
           <text>"MANAGER_REVIEW_AND_MONITORING"</text>
@@ -161,7 +161,7 @@
           <text>"MANAGER_REVIEW_AND_MONITORING"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_039zmrb">
-          <text>"reject"</text>
+          <text>"REJECT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_05swp63">
           <text>"OWNER_REVIEW_AND_MONITORING"</text>
@@ -172,7 +172,7 @@
           <text>"MANAGER_REVIEW_AND_MONITORING"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_195e151">
-          <text>"accept"</text>
+          <text>"ACCEPT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_0tko3mg">
           <text>"OWNER_CLOSE_DANGER"</text>
@@ -183,7 +183,7 @@
           <text>"OWNER_CLOSE_DANGER"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_1su6ytl">
-          <text>"submit"</text>
+          <text>"SUBMIT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1kz3buq">
           <text>"MANAGER_CLOSE_DANGER"</text>
@@ -194,7 +194,7 @@
           <text>"MANAGER_CLOSE_DANGER"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_0pga8qh">
-          <text>"accept"</text>
+          <text>"ACCEPT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_15td9ih">
           <text>"CLOSED_DANGER"</text>
@@ -205,7 +205,7 @@
           <text>"MANAGER_CLOSE_DANGER"</text>
         </inputEntry>
         <inputEntry id="UnaryTests_15fh063">
-          <text>"reject"</text>
+          <text>"REJECT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_05lhwim">
           <text>"CONSTANT_DANGER"</text>

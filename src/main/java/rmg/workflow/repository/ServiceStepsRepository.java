@@ -8,5 +8,5 @@ import rmg.workflow.model.entity.Services;
 @Repository
 public interface ServiceStepsRepository extends JpaRepository<ServiceSteps, Long> {
 
-    ServiceSteps findServiceStepsByServiceStepCode(String serviceStepCode);
+    ServiceSteps findServiceStepsByStepCode(String serviceStepCode);
 }

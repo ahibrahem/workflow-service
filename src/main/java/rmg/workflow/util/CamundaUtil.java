@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 import rmg.workflow.enumeration.CamundaProcess;
 import rmg.workflow.exceptions.AppIllegalStateException;
 import rmg.workflow.exceptions.NoDataFoundException;
+import rmg.workflow.model.dto.CompleteDto;
 import rmg.workflow.model.entity.ProcessInfo;
 import rmg.workflow.model.entity.Requests;
 import rmg.workflow.model.entity.ServiceSteps;
 import rmg.workflow.model.entity.Services;
+import rmg.workflow.repository.RequestsRepository;
 import rmg.workflow.repository.ServiceStepsRepository;
 import rmg.workflow.repository.ServicesRepository;
 import org.camunda.bpm.engine.variable.VariableMap;
@@ -23,6 +25,7 @@ import org.camunda.bpm.engine.variable.Variables;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class CamundaUtil {
 
     private final ServicesRepository servicesRepository;
     private final ServiceStepsRepository serviceStepsRepository;
+    private final RequestsRepository requestsRepository;
 
     public String getProcessNextStep(String currentStep, String currentAction, String dmnTableName) throws NoDataFoundException {
 
@@ -37,8 +41,8 @@ public class CamundaUtil {
         VariableMap variables = Variables.createVariables();
         variables.put(ConstantString.CURRENT_STEP, Variables.stringValue(currentStep));
         variables.put(ConstantString.ACTION_CODE, Variables.stringValue(currentAction));
-        DmnDecisionRuleResult dmnDecisionRuleResult= decisionService.evaluateDecisionTableByKey(dmnTableName, variables).getSingleResult();
-        if(dmnDecisionRuleResult == null){
+        DmnDecisionRuleResult dmnDecisionRuleResult = decisionService.evaluateDecisionTableByKey(dmnTableName, variables).getSingleResult();
+        if (dmnDecisionRuleResult == null) {
             throw new NoDataFoundException("NO_DATA_FOUND_FOR_ACTION_INPUT");
         }
         Map<String, Object> businessRulesResultMap = dmnDecisionRuleResult.getEntryMap();
@@ -60,25 +64,14 @@ public class CamundaUtil {
 
     public Requests initRequestObject(String serviceCode, String serviceStepCode, Long id) {
         Services services = servicesRepository.findServicesByServiceCode(serviceCode);
-        ServiceSteps serviceStep = serviceStepsRepository.findServiceStepsByServiceStepCode(serviceStepCode);
+        ServiceSteps serviceStep = serviceStepsRepository.findServiceStepsByStepCode(serviceStepCode);
 
         Requests request = new Requests();
-        request.setServiceId(services.getServiceId());
+        request.setServiceId(services.getId());
         request.setRequestNo(serviceCode + "_" + id);
-        request.setServiceStepId(serviceStep.getServiceStepId());
+        request.setServiceStepId(serviceStep.getId());
 
         return request;
-    }
-
-
-    public ProcessInfo preparedProcessInfo(Requests request, Task task) {
-        ProcessInfo processInfo = new ProcessInfo();
-        processInfo.setRequestId(request.getRequestId());
-        processInfo.setTaskId(task.getId());
-        processInfo.setTaskAssignee(task.getAssignee());
-        processInfo.setProcessInstance(task.getProcessInstanceId());
-
-        return processInfo;
     }
 
 
@@ -106,5 +99,31 @@ public class CamundaUtil {
             processInfo.setTaskId(task.getId());
             processInfo.setTaskAssignee(task.getAssignee());
         }
+    }
+
+    public void validateTaskIdAndAssignee(ProcessInfo processInfo, String currentRole) throws NoDataFoundException {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        Task task = processEngine.getTaskService().createTaskQuery().taskId(processInfo.getTaskId()).active().singleResult();
+        if (task == null || !processInfo.getTaskAssignee().equals(currentRole)) {
+            throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
+        }
+    }
+
+    public Requests validateRequestDataForComplete(List<String> endingStepList, CompleteDto completeDto) throws NoDataFoundException {
+        Optional<Requests> requestsOptional = requestsRepository.findById(completeDto.getRequestId());
+        if (requestsOptional.isEmpty()) {
+            throw new NoDataFoundException("REQUEST_NOT_FOUND");
+        }
+        Requests request = requestsOptional.get();
+
+        if (!completeDto.getTaskId().equals(request.getProcessInfoList().get(0).getTaskId())) {
+            throw new NoDataFoundException("INVALID_REQUEST_ID_OR_TASK_ID");
+        }
+
+        if (endingStepList.contains(request.getServiceStep().getStepCode())) {
+            throw new NoDataFoundException("INVALID_REQUEST_ID");
+        }
+
+        return request;
     }
 }

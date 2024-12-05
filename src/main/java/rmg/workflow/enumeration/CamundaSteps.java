@@ -20,6 +20,7 @@ public enum CamundaSteps {
     CONSTANT_DANGER("CONSTANT_DANGER"),
     CLOSED_DANGER("CLOSED_DANGER"),
     RISK_REJECTION("RISK_REJECTION"),
+    INIT_RISK("INIT_RISK"),
     ;
 
     private final String value;
