@@ -1,4 +1,4 @@
-package rmg.workflow.service.emailservice;
+package rmg.workflow.service.notifications;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import rmg.workflow.util.ConstantString;
 
 
 @Service
@@ -25,7 +26,7 @@ public class EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        helper.setFrom(mailId, "Risk");
+        helper.setFrom(mailId, ConstantString.RISK_SERVICE);
         helper.setReplyTo(mailId);
         helper.setTo(email);
 

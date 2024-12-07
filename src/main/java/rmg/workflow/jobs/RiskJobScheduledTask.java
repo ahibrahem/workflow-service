@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rmg.workflow.model.entity.Requests;
 import rmg.workflow.repository.RequestsRepository;
-import rmg.workflow.service.emailservice.EmailService;
+import rmg.workflow.service.notifications.EmailService;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
