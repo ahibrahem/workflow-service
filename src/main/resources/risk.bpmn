@@ -95,6 +95,7 @@
     <bpmn:userTask id="OWNER_REVIEW_AND_MONITORING" name="المالك - مرحلة المراجعة والمراقبة" camunda:assignee="${owner}">
       <bpmn:incoming>Flow_1kbcbt3</bpmn:incoming>
       <bpmn:incoming>Flow_18iwwq1</bpmn:incoming>
+      <bpmn:incoming>Flow_0ixl864</bpmn:incoming>
       <bpmn:outgoing>Flow_00svqh1</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1kbcbt3" sourceRef="Gateway_1nrzb3q" targetRef="OWNER_REVIEW_AND_MONITORING">
@@ -107,7 +108,6 @@
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_00svqh1</bpmn:incoming>
-      <bpmn:incoming>Flow_0ixl864</bpmn:incoming>
       <bpmn:outgoing>Flow_1smg7m1</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_00svqh1" sourceRef="OWNER_REVIEW_AND_MONITORING" targetRef="MANAGER_REVIEW_AND_MONITORING" />
@@ -159,7 +159,7 @@
       <bpmn:incoming>Flow_06a1qoa</bpmn:incoming>
       <bpmn:outgoing>Flow_0ixl864</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_0ixl864" sourceRef="OWNER_REDUCTION" targetRef="MANAGER_REVIEW_AND_MONITORING" />
+    <bpmn:sequenceFlow id="Flow_0ixl864" sourceRef="OWNER_REDUCTION" targetRef="OWNER_REVIEW_AND_MONITORING" />
     <bpmn:sequenceFlow id="Flow_06a1qoa" sourceRef="Gateway_1nrzb3q" targetRef="OWNER_REDUCTION">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'DECREASE'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -343,9 +343,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ixl864_di" bpmnElement="Flow_0ixl864">
         <di:waypoint x="1380" y="400" />
-        <di:waypoint x="1380" y="290" />
-        <di:waypoint x="1570" y="290" />
-        <di:waypoint x="1570" y="220" />
+        <di:waypoint x="1380" y="220" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_06a1qoa_di" bpmnElement="Flow_06a1qoa">
         <di:waypoint x="1160" y="305" />

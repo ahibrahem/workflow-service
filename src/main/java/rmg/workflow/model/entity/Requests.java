@@ -23,23 +23,24 @@ public class Requests implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "service_id")
     private Long serviceId;
+
     @Column(name = "service_step_id")
     private Long serviceStepId;
 
     @Column(name = "risk_owner_id")
     private Long riskOwnerId;
-    @Column(name = "risk_owner_code")
-    private String riskOwnerCode;
 
     @Column(name = "risk_manager_id")
     private Long riskManagerId;
-    @Column(name = "risk_manager_code")
-    private String riskManagerCode;
 
     @Column(name = "risk_id")
     private Long riskId;
+
+    @Column(name = "plan_id")
+    private Long planId;
 
     @Column(name = "request_no")
     private String requestNo;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="risk_rules" name="risk rules" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
-  <decision id="risk_rules_desicion" name="risk  rules desicion" camunda:historyTimeToLive="180">
+  <decision id="risk_rules_decision" name="risk  rules decision" camunda:historyTimeToLive="180">
     <decisionTable id="DecisionTable_127f2lx">
       <input id="Input_1" biodi:width="357">
         <inputExpression id="InputExpression_1" typeRef="string">
@@ -153,7 +153,7 @@
           <text>"SUBMIT"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_092jxbj">
-          <text>"MANAGER_REVIEW_AND_MONITORING"</text>
+          <text>"OWNER_REVIEW_AND_MONITORING"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_0h5dzb2">
@@ -215,7 +215,7 @@
   </decision>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram>
-      <dmndi:DMNShape dmnElementRef="risk_rules_desicion">
+      <dmndi:DMNShape dmnElementRef="risk_rules_decision">
         <dc:Bounds height="80" width="180" x="160" y="100" />
       </dmndi:DMNShape>
     </dmndi:DMNDiagram>

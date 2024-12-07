@@ -25,8 +25,12 @@ public class ProcessInfo implements Serializable {
     @Column(name = "request_id")
     private Long requestId;
 
-    @Column(name = "task_assignee")
-    private String taskAssignee;
+    @Column(name = "assignee_user")
+    private Long assigneeUserId;
+
+    @JoinColumn(name = "assignee_user", insertable = false, updatable = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Users assigneeUser;
 
     @Column(name = "process_instance")
     private String processInstance;

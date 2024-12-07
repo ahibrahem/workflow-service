@@ -34,6 +34,7 @@ public class CamundaUtil {
     private final ServicesRepository servicesRepository;
     private final ServiceStepsRepository serviceStepsRepository;
     private final RequestsRepository requestsRepository;
+    private final CommonUtil commonUtil;
 
     public String getProcessNextStep(String currentStep, String currentAction, String dmnTableName) throws NoDataFoundException {
 
@@ -50,10 +51,10 @@ public class CamundaUtil {
 
     }
 
-    public Task startProcess(Map<String, Object> processVars) {
+    public Task startProcess(Map<String, Object> processVars , String processName) {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         ProcessInstanceWithVariables instance = processEngine.getRuntimeService()
-                .createProcessInstanceByKey(CamundaProcess.RISK.getValue())
+                .createProcessInstanceByKey(processName)
                 .setVariables(processVars)
                 .executeWithVariablesInReturn();
 
@@ -81,11 +82,10 @@ public class CamundaUtil {
             throw new AppIllegalStateException("TASK_NOT_FOUND_ERROR");
     }
 
-
     public void completeProcessTask(String taskId, ProcessInfo processInfo
             , List<String> endingStepList
             , Map<String, Object> vars
-            , String nextStepCode) {
+            , String nextStepCode) throws NoDataFoundException {
 
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         processEngine.getTaskService().complete(taskId, vars);
@@ -94,17 +94,17 @@ public class CamundaUtil {
 
         if (endingStepList.contains(nextStepCode)) {
             processInfo.setTaskId(null);
-            processInfo.setTaskAssignee(null);
+            processInfo.setAssigneeUser(null);
         } else {
             processInfo.setTaskId(task.getId());
-            processInfo.setTaskAssignee(task.getAssignee());
+            processInfo.setAssigneeUserId(commonUtil.findUserIdByRoleCode(task.getAssignee()));
         }
     }
 
-    public void validateTaskIdAndAssignee(ProcessInfo processInfo, String currentRole) throws NoDataFoundException {
+    public void validateTaskIdAndAssignee(ProcessInfo processInfo, Long currentRole) throws NoDataFoundException {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         Task task = processEngine.getTaskService().createTaskQuery().taskId(processInfo.getTaskId()).active().singleResult();
-        if (task == null || !processInfo.getTaskAssignee().equals(currentRole)) {
+        if (task == null || !processInfo.getAssigneeUser().equals(currentRole)) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }
     }

@@ -7,5 +7,5 @@ import rmg.workflow.model.entity.RequestSla;
 @Repository
 public interface RequestSlaRepository extends JpaRepository<RequestSla, Long> {
 
-    RequestSla findByRequestIdAndTaskAssigneeAndTaskIdAndActionDateIsNull(Long requestId, String taskAssignee, String taskId);
+    RequestSla findByRequestIdAndAssigneeUserAndTaskIdAndActionDateIsNull(Long requestId, Long assigneeUser, String taskId);
 }

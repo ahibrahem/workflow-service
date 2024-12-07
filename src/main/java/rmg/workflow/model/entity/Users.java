@@ -21,10 +21,19 @@ public class Users implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "user_name_ar")
+    private String userNameAr;
+
+    @Column(name = "user_name_en")
+    private String userNameEn;
+
+    @Column(name = "role_code")
+    private String roleCode;
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "email")
+    private String email;
 
 }

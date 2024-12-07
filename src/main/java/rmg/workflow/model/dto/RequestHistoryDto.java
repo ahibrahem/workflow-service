@@ -16,6 +16,6 @@ public class RequestHistoryDto {
     private Long requestId;
     private ServiceStepActionsDto stepAction;
     private LocalDateTime actionDate;
-    private String taskAssignee;
+    private UsersDto assigneeUser;
     private String notes;
 }

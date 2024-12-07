@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class processInfoDto {
+public class UsersDto {
 
-    private Long Id;
-    private String taskId;
+    private String userNameAr;
+    private String userNameEn;
+    private String roleCode;
 }

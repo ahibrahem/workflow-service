@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import rmg.workflow.enumeration.CamundaProcess;
 import rmg.workflow.enumeration.CamundaSteps;
 import rmg.workflow.exceptions.AppIllegalStateException;
 import rmg.workflow.exceptions.NoDataFoundException;
@@ -25,7 +26,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class WorkflowService {
+public class WorkflowRiskService {
 
     private final RequestsRepository requestsRepository;
     private final ServiceStepsRepository serviceStepsRepository;
@@ -36,9 +37,9 @@ public class WorkflowService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public String startProcess(RiskDto riskDto) throws AppIllegalStateException {
+    public String startProcess(RiskDto riskDto) throws AppIllegalStateException, NoDataFoundException {
 
-        validateValidRisk(riskDto.getRiskId());
+        validateIfRiskRequestExist(riskDto.getRiskId());
 
         Requests request = camundaUtil.initRequestObject(ConstantString.RISK_SERVICE, CamundaSteps.OWNER_RISK_ANALYSIS.getValue(), riskDto.getRiskId());
 
@@ -46,33 +47,42 @@ public class WorkflowService {
         Requests savedRequest = requestsRepository.save(request);
 
         Map<String, Object> processVars = new HashMap<>();
-        processVars.put(ConstantString.MANAGER, savedRequest.getRiskManagerCode());
-        processVars.put(ConstantString.OWNER, savedRequest.getRiskOwnerCode());
-        Task task = camundaUtil.startProcess(processVars);
+        processVars.put(ConstantString.MANAGER, commonUtil.findRoleCodeByUserId(riskDto.getRiskManagerId()));
+        processVars.put(ConstantString.OWNER, commonUtil.findRoleCodeByUserId(riskDto.getRiskOwnerId()));
+        Task task = camundaUtil.startProcess(processVars, CamundaProcess.RISK.getValue());
 
+        ServiceSteps serviceStep = serviceStepsRepository.findServiceStepsByStepCode(CamundaSteps.INIT_RISK.getValue());
         commonUtil.preparedProcessInfo(savedRequest, task);
-        commonUtil.preparedRequestHistory(savedRequest.getId(), riskDto.getNotes());
-        commonUtil.addNewRequestSla(savedRequest.getId(), task.getId(), task.getAssignee());
+        commonUtil.preparedRequestHistory(savedRequest.getId(), null, riskDto.getNotes(), serviceStep.getId(), CamundaSteps.INIT_RISK.getValue());
+        Long userId = commonUtil.findUserIdByRoleCode(task.getAssignee());
+        commonUtil.addNewRequestSla(savedRequest.getId(), task.getId(), userId);
         return "process started";
     }
 
-    private void validateValidRisk(Long riskId) throws AppIllegalStateException {
+//    private void validateValidRisk(Long riskId) throws AppIllegalStateException {
+//        List<Requests> requestList = requestsRepository.findByRiskId(riskId);
+//        if (requestList != null && !requestList.isEmpty()) {
+//            ArrayList<String> endingStepList = new ArrayList<>(List.of(CamundaSteps.CONSTANT_DANGER.getValue(),
+//                    CamundaSteps.CLOSED_DANGER.getValue(), CamundaSteps.RISK_REJECTION.getValue()));
+//            for (Requests request : requestList) {
+//                if (!endingStepList.contains(request.getServiceStep().getStepCode())) {
+//                    throw new AppIllegalStateException("REQUEST_WITH_SAME_ID_IS_IN_PROGRESS");
+//                }
+//            }
+//        }
+//    }
+
+    private void validateIfRiskRequestExist(Long riskId) throws AppIllegalStateException {
         List<Requests> requestList = requestsRepository.findByRiskId(riskId);
         if (requestList != null && !requestList.isEmpty()) {
-            ArrayList<String> endingStepList = new ArrayList<>(List.of(CamundaSteps.CONSTANT_DANGER.getValue(),
-                    CamundaSteps.CLOSED_DANGER.getValue(), CamundaSteps.RISK_REJECTION.getValue()));
-            for (Requests request : requestList) {
-                if (!endingStepList.contains(request.getServiceStep().getStepCode())) {
-                    throw new AppIllegalStateException("REQUEST_WITH_SAME_ID_IS_IN_PROGRESS");
-                }
-            }
+            throw new AppIllegalStateException("RISK_ID_ALREADY_EXIST");
         }
     }
 
 
     public RequestDto getRiskProcess(RiskDto riskDto) throws NoDataFoundException {
 
-        Requests request = requestsRepository.findByRiskIdAndRiskOwnerIdAndRiskManagerId(riskDto.getRiskId(), riskDto.getRiskOwnerId(), riskDto.getRiskManagerId());
+        Requests request = requestsRepository.findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdIsNull(riskDto.getRiskId(), riskDto.getRiskOwnerId(), riskDto.getRiskManagerId());
         if (request == null) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }
@@ -80,7 +90,7 @@ public class WorkflowService {
         if (processInfo.getTaskId() == null) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }
-        camundaUtil.validateTaskIdAndAssignee(processInfo, riskDto.getCurrentRole());
+        camundaUtil.validateTaskIdAndAssignee(processInfo, riskDto.getCurrentUser());
         return requestMapper.toRequestDto(request);
     }
 
@@ -91,36 +101,37 @@ public class WorkflowService {
                 CamundaSteps.CLOSED_DANGER.getValue(), CamundaSteps.RISK_REJECTION.getValue()));
 
         camundaUtil.validateTaskHandling(completeDto.getTaskId());
+        commonUtil.validateTransferActionNewRole(completeDto);
 
         Requests request = camundaUtil.validateRequestDataForComplete(endingStepList, completeDto);
         ServiceSteps currentStep = request.getServiceStep();
-        String nextStep = camundaUtil.getProcessNextStep(request.getServiceStep().getStepCode(), completeDto.getAction(), ConstantString.RISK_RULES_DESICION);
+        String nextStep = camundaUtil.getProcessNextStep(request.getServiceStep().getStepCode(), completeDto.getAction(), ConstantString.RISK_RULES_DECISION);
         request.setServiceStepId(serviceStepsRepository.findServiceStepsByStepCode(nextStep).getId());
 
         if (completeDto.getAction().equals("TRANSFER")) {
-            request.setRiskManagerCode(completeDto.getNewRiskManagerCode());
-            request.setRiskOwnerCode(completeDto.getNewRiskOwnerCode());
+            request.setRiskManagerId(completeDto.getNewRiskManagerId());
+            request.setRiskOwnerId(completeDto.getNewRiskManagerId());
         }
         requestsRepository.save(request);
 
         Map<String, Object> vars = new HashMap<>();
         vars.put(ConstantString.ACTION, completeDto.getAction());
         if (completeDto.getAction().equals("TRANSFER")) {
-            vars.put(ConstantString.MANAGER, completeDto.getNewRiskManagerCode());
-            vars.put(ConstantString.OWNER, completeDto.getNewRiskOwnerCode());
+            vars.put(ConstantString.MANAGER, commonUtil.findRoleCodeByUserId(completeDto.getNewRiskManagerId()));
+            vars.put(ConstantString.OWNER, commonUtil.findRoleCodeByUserId(completeDto.getNewRiskOwnerId()));
         }
 
         ProcessInfo processInfo = request.getProcessInfoList().get(0);
-        String currentTaskAssignee = request.getProcessInfoList().get(0).getTaskAssignee();
+        Long currentAssigneeUser = request.getProcessInfoList().get(0).getAssigneeUserId();
         camundaUtil.completeProcessTask(completeDto.getTaskId(),
                 processInfo, endingStepList, vars, nextStep);
 
-        commonUtil.preparedRequestHistory(request.getId(), currentTaskAssignee
+        commonUtil.preparedRequestHistory(request.getId(), currentAssigneeUser
                 , completeDto.getNotes(), currentStep.getId(), completeDto.getAction());
 
-        commonUtil.updateRequestSla(completeDto, currentTaskAssignee);
+        commonUtil.updateRequestSla(completeDto, currentAssigneeUser);
         if (!endingStepList.contains(nextStep)) {
-            commonUtil.addNewRequestSla(completeDto.getRequestId(), processInfo.getTaskId(), processInfo.getTaskAssignee());
+            commonUtil.addNewRequestSla(completeDto.getRequestId(), processInfo.getTaskId(), processInfo.getAssigneeUserId());
         }
         processInfoRepository.save(processInfo);
         return "process was sent to next task";

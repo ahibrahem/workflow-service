@@ -4,58 +4,64 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_0e69zcg</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="Activity_1pxbra3" name="مدير المخاطر  - خطة التخفيض">
+    <bpmn:userTask id="MANAGER_RISK_REDUCTION_PLAN" name="مدير المخاطر  - خطة التخفيض" camunda:assignee="${manager}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="action" label="action" type="string" />
+          <camunda:formField id="manager" label="manager" type="string" />
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0e69zcg</bpmn:incoming>
       <bpmn:incoming>Flow_1fa90he</bpmn:incoming>
       <bpmn:outgoing>Flow_0ik2ow3</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_0e69zcg" sourceRef="StartEvent_1" targetRef="Activity_1pxbra3" />
+    <bpmn:sequenceFlow id="Flow_0e69zcg" sourceRef="StartEvent_1" targetRef="MANAGER_RISK_REDUCTION_PLAN" />
     <bpmn:exclusiveGateway id="Gateway_0ce8gxx">
       <bpmn:incoming>Flow_0ik2ow3</bpmn:incoming>
       <bpmn:outgoing>Flow_18kyrns</bpmn:outgoing>
       <bpmn:outgoing>Flow_1p1ow3m</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0ik2ow3" sourceRef="Activity_1pxbra3" targetRef="Gateway_0ce8gxx" />
-    <bpmn:userTask id="Activity_0lj1mz5" name="المالك - مرحلة التخفيض">
+    <bpmn:sequenceFlow id="Flow_0ik2ow3" sourceRef="MANAGER_RISK_REDUCTION_PLAN" targetRef="Gateway_0ce8gxx" />
+    <bpmn:userTask id="OWNER_RISK_REDUCTION_PLAN" name="المالك - مرحلة التخفيض" camunda:assignee="${owner}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="owner" label="owner" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_18kyrns</bpmn:incoming>
       <bpmn:outgoing>Flow_1fa90he</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_18kyrns" sourceRef="Gateway_0ce8gxx" targetRef="Activity_0lj1mz5">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject'}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_18kyrns" sourceRef="Gateway_0ce8gxx" targetRef="OWNER_RISK_REDUCTION_PLAN">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'REJECT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="Activity_16a2bwp" name="المدير التنفيذى - طلب إغلاق">
+    <bpmn:userTask id="EXECUTIVE_DIRECTOR_RISK_PLAN_CLOSER_REQUEST" name="المدير التنفيذى - طلب إغلاق" camunda:assignee="EXECUTIVE_DIRECTOR">
       <bpmn:incoming>Flow_1p1ow3m</bpmn:incoming>
       <bpmn:incoming>Flow_0z2461i</bpmn:incoming>
       <bpmn:outgoing>Flow_0z2voyx</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_1p1ow3m" sourceRef="Gateway_0ce8gxx" targetRef="Activity_16a2bwp">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_1p1ow3m" sourceRef="Gateway_0ce8gxx" targetRef="EXECUTIVE_DIRECTOR_RISK_PLAN_CLOSER_REQUEST">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'ACCEPT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_1fa90he" sourceRef="Activity_0lj1mz5" targetRef="Activity_1pxbra3" />
-    <bpmn:userTask id="Activity_1n8wts1" name="مدير المخاطر  - طلب إغلاق">
+    <bpmn:sequenceFlow id="Flow_1fa90he" sourceRef="OWNER_RISK_REDUCTION_PLAN" targetRef="MANAGER_RISK_REDUCTION_PLAN" />
+    <bpmn:userTask id="MANAGER_RISK_PLAN_CLOSER_REQUEST" name="مدير المخاطر  - طلب إغلاق" camunda:assignee="${manager}">
       <bpmn:incoming>Flow_0z2voyx</bpmn:incoming>
       <bpmn:outgoing>Flow_00m49la</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_0z2voyx" sourceRef="Activity_16a2bwp" targetRef="Activity_1n8wts1" />
+    <bpmn:sequenceFlow id="Flow_0z2voyx" sourceRef="EXECUTIVE_DIRECTOR_RISK_PLAN_CLOSER_REQUEST" targetRef="MANAGER_RISK_PLAN_CLOSER_REQUEST" />
     <bpmn:exclusiveGateway id="Gateway_0xh0qqf">
       <bpmn:incoming>Flow_00m49la</bpmn:incoming>
       <bpmn:outgoing>Flow_0z2461i</bpmn:outgoing>
       <bpmn:outgoing>Flow_0cpk1db</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_00m49la" sourceRef="Activity_1n8wts1" targetRef="Gateway_0xh0qqf" />
-    <bpmn:sequenceFlow id="Flow_0z2461i" sourceRef="Gateway_0xh0qqf" targetRef="Activity_16a2bwp">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'reject'}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_00m49la" sourceRef="MANAGER_RISK_PLAN_CLOSER_REQUEST" targetRef="Gateway_0xh0qqf" />
+    <bpmn:sequenceFlow id="Flow_0z2461i" sourceRef="Gateway_0xh0qqf" targetRef="EXECUTIVE_DIRECTOR_RISK_PLAN_CLOSER_REQUEST">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'REJECT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="Event_178893c">
       <bpmn:incoming>Flow_0cpk1db</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0cpk1db" sourceRef="Gateway_0xh0qqf" targetRef="Event_178893c">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'accept'}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${action == 'ACCEPT'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -63,22 +69,22 @@
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="262" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1pxbra3_di" bpmnElement="Activity_1pxbra3">
+      <bpmndi:BPMNShape id="Activity_1pxbra3_di" bpmnElement="MANAGER_RISK_REDUCTION_PLAN">
         <dc:Bounds x="310" y="240" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0ce8gxx_di" bpmnElement="Gateway_0ce8gxx" isMarkerVisible="true">
         <dc:Bounds x="485" y="255" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0lj1mz5_di" bpmnElement="Activity_0lj1mz5">
+      <bpmndi:BPMNShape id="Activity_0lj1mz5_di" bpmnElement="OWNER_RISK_REDUCTION_PLAN">
         <dc:Bounds x="610" y="160" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_16a2bwp_di" bpmnElement="Activity_16a2bwp">
+      <bpmndi:BPMNShape id="Activity_16a2bwp_di" bpmnElement="EXECUTIVE_DIRECTOR_RISK_PLAN_CLOSER_REQUEST">
         <dc:Bounds x="610" y="340" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1n8wts1_di" bpmnElement="Activity_1n8wts1">
+      <bpmndi:BPMNShape id="Activity_1n8wts1_di" bpmnElement="MANAGER_RISK_PLAN_CLOSER_REQUEST">
         <dc:Bounds x="820" y="340" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>

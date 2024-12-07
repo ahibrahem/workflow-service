@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository;
 import rmg.workflow.model.entity.Users;
 @Repository
 public interface UsersRepository extends JpaRepository<Users, Long> {
+
+    Users findByRoleCode(String roleCode);
 }

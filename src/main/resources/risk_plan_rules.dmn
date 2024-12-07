@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="risk_plan_rules" name="risk plan rules" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.15.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.19.0">
+  <decision id="risk_plan_rules_decision" name="risk plan rules decision" camunda:historyTimeToLive="180">
+    <decisionTable id="DecisionTable_1rff4j4">
+      <input id="Input_1" biodi:width="388">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>current_step</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0veg1z6" biodi:width="233">
+        <inputExpression id="LiteralExpression_0b1eee8" typeRef="string">
+          <text>action_code</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" name="next_step" typeRef="string" biodi:width="402" />
+      <rule id="DecisionRule_13n6ajd">
+        <inputEntry id="UnaryTests_036q5ri">
+          <text>"MANAGER_RISK_REDUCTION_PLAN"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0fum62t">
+          <text>"REJECT"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_096ldts">
+          <text>"OWNER_RISK_REDUCTION_PLAN"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0n8jmm5">
+        <inputEntry id="UnaryTests_1pln21s">
+          <text>"MANAGER_RISK_REDUCTION_PLAN"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0nm3t9s">
+          <text>"ACCEPT"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_19f5d1y">
+          <text>"EXECUTIVE_DIRECTOR_RISK_PLAN_CLOSER_REQUEST"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_069zeje">
+        <inputEntry id="UnaryTests_03k6nj3">
+          <text>"OWNER_RISK_REDUCTION_PLAN"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_14jcxhv">
+          <text>"SUBMIT"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0iiw7my">
+          <text>"MANAGER_RISK_REDUCTION_PLAN"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_18illjk">
+        <inputEntry id="UnaryTests_05px7ge">
+          <text>"EXECUTIVE_DIRECTOR_RISK_PLAN_CLOSER_REQUEST"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_11fm4gx">
+          <text>"SUBMIT"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0kq38xm">
+          <text>"MANAGER_RISK_PLAN_CLOSER_REQUEST"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_09z262l">
+        <inputEntry id="UnaryTests_1e2rpya">
+          <text>"MANAGER_RISK_PLAN_CLOSER_REQUEST"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0cem05u">
+          <text>"ACCEPT"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0d5nhak">
+          <text>"RISK_REDUCTION_PLAN_CLOSED"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1r0bbcb">
+        <inputEntry id="UnaryTests_1xbfxyo">
+          <text>"MANAGER_RISK_PLAN_CLOSER_REQUEST"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_15mhv9j">
+          <text>"REJECT"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_12y5s7k">
+          <text>"EXECUTIVE_DIRECTOR_RISK_PLAN_CLOSER_REQUEST"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="risk_plan_rules_decision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

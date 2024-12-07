@@ -13,9 +13,8 @@ public class RiskDto {
     private Long riskId;
     private Long riskOwnerId;
     private Long riskManagerId;
-    private String riskOwnerCode;
-    private String riskManagerCode;
-    private String currentRole;
+    private Long currentUser;
+    private Long planId;
     private String notes;
 
 

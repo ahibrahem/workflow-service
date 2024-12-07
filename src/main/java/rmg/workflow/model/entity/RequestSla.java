@@ -23,8 +23,14 @@ public class RequestSla implements Serializable {
     @Column(name = "request_id")
     private Long requestId;
 
-    @Column(name = "task_assignee")
-    private String taskAssignee;
+    @Column(name = "task_id")
+    private String taskId;
+
+    @Column(name = "assignee_user")
+    private Long assigneeUser;
+
+    @Column(name = "action_user")
+    private Long actionUser;
 
     @Column(name = "assign_date")
     private LocalDateTime assignDate;
@@ -32,9 +38,4 @@ public class RequestSla implements Serializable {
     @Column(name = "action_date")
     private LocalDateTime actionDate;
 
-    @Column(name = "action_user")
-    private Long actionUser;
-
-    @Column(name = "task_id")
-    private String taskId;
 }

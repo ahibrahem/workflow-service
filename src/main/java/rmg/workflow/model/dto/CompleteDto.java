@@ -14,7 +14,6 @@ public class CompleteDto {
     private String taskId;
     private Long userId;
     private String notes;
-    private String newRiskOwnerCode;
-    private String newRiskManagerCode;
-
+    private Long newRiskOwnerId;
+    private Long newRiskManagerId;
 }
