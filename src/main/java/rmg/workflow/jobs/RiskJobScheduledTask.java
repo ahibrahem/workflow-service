@@ -23,7 +23,7 @@ public class RiskJobScheduledTask {
     private final RequestsRepository requestsRepository;
 
     @Transactional
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 7 * * * *")
     public void executeTask() {
         List<Requests> requestsList = requestsRepository.findLateRequests();
         System.out.println("Scheduled task running at: " + LocalDateTime.now());

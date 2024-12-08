@@ -59,19 +59,6 @@ public class WorkflowRiskService {
         return "process started";
     }
 
-//    private void validateValidRisk(Long riskId) throws AppIllegalStateException {
-//        List<Requests> requestList = requestsRepository.findByRiskId(riskId);
-//        if (requestList != null && !requestList.isEmpty()) {
-//            ArrayList<String> endingStepList = new ArrayList<>(List.of(CamundaSteps.CONSTANT_DANGER.getValue(),
-//                    CamundaSteps.CLOSED_DANGER.getValue(), CamundaSteps.RISK_REJECTION.getValue()));
-//            for (Requests request : requestList) {
-//                if (!endingStepList.contains(request.getServiceStep().getStepCode())) {
-//                    throw new AppIllegalStateException("REQUEST_WITH_SAME_ID_IS_IN_PROGRESS");
-//                }
-//            }
-//        }
-//    }
-
     private void validateIfRiskRequestExist(Long riskId) throws AppIllegalStateException {
         List<Requests> requestList = requestsRepository.findByRiskId(riskId);
         if (requestList != null && !requestList.isEmpty()) {

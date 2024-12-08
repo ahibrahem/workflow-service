@@ -13,7 +13,8 @@ import java.util.Optional;
 public interface RequestsRepository extends JpaRepository<Requests, Long> {
 
     Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdIsNull(Long riskId, Long riskOwnerId, Long riskManagerId);
-    Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdAndPlanIdIsNotNull(Long riskId, Long riskOwnerId, Long riskManagerId , Long planId);
+
+    Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdAndPlanIdIsNotNull(Long riskId, Long riskOwnerId, Long riskManagerId, Long planId);
 
     List<Requests> findByRiskId(Long riskId);
 
@@ -27,4 +28,5 @@ public interface RequestsRepository extends JpaRepository<Requests, Long> {
     )
     List<Requests> findLateRequests();
 
+    List<Requests> findByRiskIdAndPlanId(Long riskId, Long planId);
 }

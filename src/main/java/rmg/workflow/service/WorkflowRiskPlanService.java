@@ -42,6 +42,7 @@ public class WorkflowRiskPlanService {
         if (riskDto.getRiskId() == null || riskDto.getPlanId() == null) {
             throw new AppIllegalStateException("RISK_ID_OR_PLAN_ID_CANT_BE_NULL");
         }
+        validateIfRiskRequestExist(riskDto);
 
         Requests request = camundaUtil.initRequestObject(ConstantString.RISK_REDUCTION_PLAN, CamundaSteps.MANAGER_RISK_REDUCTION_PLAN.getValue(), riskDto.getPlanId());
         commonUtil.preparedRequestData(request, riskDto);
@@ -58,6 +59,13 @@ public class WorkflowRiskPlanService {
         Long userId = commonUtil.findUserIdByRoleCode(task.getAssignee());
         commonUtil.addNewRequestSla(savedRequest.getId(), task.getId(), userId);
         return "process started";
+    }
+
+    private void validateIfRiskRequestExist(RiskDto riskDto) throws AppIllegalStateException {
+        List<Requests> requestList = requestsRepository.findByRiskIdAndPlanId(riskDto.getRiskId(),riskDto.getPlanId());
+        if (requestList != null && !requestList.isEmpty()) {
+            throw new AppIllegalStateException("RISK_ID_AND_PLAN_ID_ALREADY_EXIST");
+        }
     }
 
     public Object getRiskPlanProcess(RiskDto riskDto) throws NoDataFoundException {
