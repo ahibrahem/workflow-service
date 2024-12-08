@@ -104,7 +104,7 @@ public class CamundaUtil {
     public void validateTaskIdAndAssignee(ProcessInfo processInfo, Long currentRole) throws NoDataFoundException {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         Task task = processEngine.getTaskService().createTaskQuery().taskId(processInfo.getTaskId()).active().singleResult();
-        if (task == null || !processInfo.getAssigneeUser().equals(currentRole)) {
+        if (task == null || !processInfo.getAssigneeUserId().equals(currentRole)) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }
     }
