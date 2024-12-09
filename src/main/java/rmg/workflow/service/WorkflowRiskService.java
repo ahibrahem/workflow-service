@@ -10,6 +10,7 @@ import rmg.workflow.exceptions.AppIllegalStateException;
 import rmg.workflow.exceptions.NoDataFoundException;
 import rmg.workflow.mapper.RequestMapper;
 import rmg.workflow.model.dto.CompleteDto;
+import rmg.workflow.model.dto.RequestDetailsDto;
 import rmg.workflow.model.dto.RequestDto;
 import rmg.workflow.model.dto.RiskDto;
 import rmg.workflow.model.entity.ProcessInfo;
@@ -124,4 +125,11 @@ public class WorkflowRiskService {
         return "process was sent to next task";
     }
 
+    public RequestDetailsDto getRiskDetails(Long riskId) throws NoDataFoundException {
+        List<Requests> requestList = requestsRepository.findByRiskId(riskId);
+        if (requestList == null || requestList.isEmpty()) {
+            throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
+        }
+        return requestMapper.toRequestDetailsDto(requestList.get(0));
+    }
 }

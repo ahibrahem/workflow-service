@@ -61,4 +61,7 @@ public class Requests implements Serializable {
     @OneToMany(mappedBy = "requestId", fetch = FetchType.LAZY)
     private List<RequestHistory> requestHistoryList;
 
+    @OneToMany(mappedBy = "requestId", fetch = FetchType.LAZY)
+    private List<RequestSla> requestSlaList;
+
 }

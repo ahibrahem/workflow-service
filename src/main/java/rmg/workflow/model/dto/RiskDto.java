@@ -16,6 +16,4 @@ public class RiskDto {
     private Long currentUser;
     private Long planId;
     private String notes;
-
-
 }

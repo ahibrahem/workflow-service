@@ -43,4 +43,12 @@ public class WorkflowRiskController {
                 workflowRiskService.completeRiskProcess(completeDto),
                 HttpStatus.OK.value()));
     }
+
+
+    @GetMapping("/get-risk-details/{riskId}")
+    public ResponseEntity<ResponseDto> getRiskDetails(@PathVariable Long riskId) throws NoDataFoundException {
+        return ResponseEntity.ok(new ResponseDto(true, null,
+                workflowRiskService.getRiskDetails(riskId),
+                HttpStatus.OK.value()));
+    }
 }
