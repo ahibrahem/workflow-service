@@ -7,17 +7,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class RequestSlaDto {
 
-    private Long id;
-    private Long requestId;
+    private UUID id;
+    private UUID requestId;
     private String taskId;
-    private Long assigneeUser;
-    private Long actionUser;
+    private UUID assigneeUser;
+    private UUID actionUser;
     private LocalDateTime assignDate;
     private LocalDateTime actionDate;
 }

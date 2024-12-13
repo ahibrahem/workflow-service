@@ -7,9 +7,12 @@ import lombok.Setter;
 
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 
 @Data
@@ -19,28 +22,30 @@ import java.util.List;
 @Setter
 public class Requests implements Serializable {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @UuidGenerator()
+    private UUID requestId;
 
     @Column(name = "service_id")
-    private Long serviceId;
+    private UUID serviceId;
 
     @Column(name = "service_step_id")
-    private Long serviceStepId;
+    private UUID serviceStepId;
 
     @Column(name = "risk_owner_id")
-    private Long riskOwnerId;
+    private UUID riskOwnerId;
 
     @Column(name = "risk_manager_id")
-    private Long riskManagerId;
+    private UUID riskManagerId;
 
     @Column(name = "risk_id")
-    private Long riskId;
+    private UUID riskId;
 
     @Column(name = "plan_id")
-    private Long planId;
+    private UUID planId;
 
     @Column(name = "request_no")
     private String requestNo;

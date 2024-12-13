@@ -20,10 +20,7 @@ import rmg.workflow.util.CamundaUtil;
 import rmg.workflow.util.CommonUtil;
 import rmg.workflow.util.ConstantString;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -55,9 +52,9 @@ public class WorkflowRiskPlanService {
 
         ServiceSteps serviceStep = serviceStepsRepository.findServiceStepsByStepCode(CamundaSteps.INIT_REDUCTION_PLAN.getValue());
         commonUtil.preparedProcessInfo(savedRequest, task);
-        commonUtil.preparedRequestHistory(savedRequest.getId(), null, riskDto.getNotes(), serviceStep.getId(), CamundaSteps.INIT_REDUCTION_PLAN.getValue());
-        Long userId = commonUtil.findUserIdByRoleCode(task.getAssignee());
-        commonUtil.addNewRequestSla(savedRequest.getId(), task.getId(), userId);
+        commonUtil.preparedRequestHistory(savedRequest.getRequestId(), null, riskDto.getNotes(), serviceStep.getId(), CamundaSteps.INIT_REDUCTION_PLAN.getValue());
+        UUID userId = commonUtil.findUserIdByRoleCode(task.getAssignee());
+        commonUtil.addNewRequestSla(savedRequest.getRequestId(), task.getId(), userId);
         return "process started";
     }
 
@@ -93,11 +90,11 @@ public class WorkflowRiskPlanService {
         Map<String, Object> vars = new HashMap<>();
         vars.put(ConstantString.ACTION, completeDto.getAction());
         ProcessInfo processInfo = request.getProcessInfoList().get(0);
-        Long currentAssigneeUser = request.getProcessInfoList().get(0).getAssigneeUserId();
+        UUID currentAssigneeUser = request.getProcessInfoList().get(0).getAssigneeUserId();
         camundaUtil.completeProcessTask(completeDto.getTaskId(),
                 processInfo, endingStepList, vars, nextStep);
 
-        commonUtil.preparedRequestHistory(request.getId(), currentAssigneeUser
+        commonUtil.preparedRequestHistory(request.getRequestId(), currentAssigneeUser
                 , completeDto.getNotes(), currentStep.getId(), completeDto.getAction());
 
         commonUtil.updateRequestSla(completeDto, currentAssigneeUser);

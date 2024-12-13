@@ -54,13 +54,13 @@ public class WorkflowRiskService {
 
         ServiceSteps serviceStep = serviceStepsRepository.findServiceStepsByStepCode(CamundaSteps.INIT_RISK.getValue());
         commonUtil.preparedProcessInfo(savedRequest, task);
-        commonUtil.preparedRequestHistory(savedRequest.getId(), null, riskDto.getNotes(), serviceStep.getId(), CamundaSteps.INIT_RISK.getValue());
-        Long userId = commonUtil.findUserIdByRoleCode(task.getAssignee());
-        commonUtil.addNewRequestSla(savedRequest.getId(), task.getId(), userId);
+        commonUtil.preparedRequestHistory(savedRequest.getRequestId(), null, riskDto.getNotes(), serviceStep.getId(), CamundaSteps.INIT_RISK.getValue());
+        UUID userId = commonUtil.findUserIdByRoleCode(task.getAssignee());
+        commonUtil.addNewRequestSla(savedRequest.getRequestId(), task.getId(), userId);
         return "process started";
     }
 
-    private void validateIfRiskRequestExist(Long riskId) throws AppIllegalStateException {
+    private void validateIfRiskRequestExist(UUID riskId) throws AppIllegalStateException {
         List<Requests> requestList = requestsRepository.findByRiskId(riskId);
         if (requestList != null && !requestList.isEmpty()) {
             throw new AppIllegalStateException("RISK_ID_ALREADY_EXIST");
@@ -110,11 +110,11 @@ public class WorkflowRiskService {
         }
 
         ProcessInfo processInfo = request.getProcessInfoList().get(0);
-        Long currentAssigneeUser = request.getProcessInfoList().get(0).getAssigneeUserId();
+        UUID currentAssigneeUser = request.getProcessInfoList().get(0).getAssigneeUserId();
         camundaUtil.completeProcessTask(completeDto.getTaskId(),
                 processInfo, endingStepList, vars, nextStep);
 
-        commonUtil.preparedRequestHistory(request.getId(), currentAssigneeUser
+        commonUtil.preparedRequestHistory(request.getRequestId(), currentAssigneeUser
                 , completeDto.getNotes(), currentStep.getId(), completeDto.getAction());
 
         commonUtil.updateRequestSla(completeDto, currentAssigneeUser);
@@ -125,7 +125,7 @@ public class WorkflowRiskService {
         return "process was sent to next task";
     }
 
-    public RequestDetailsDto getRiskDetails(Long riskId) throws NoDataFoundException {
+    public RequestDetailsDto getRiskDetails(UUID riskId) throws NoDataFoundException {
         List<Requests> requestList = requestsRepository.findByRiskId(riskId);
         if (requestList == null || requestList.isEmpty()) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);

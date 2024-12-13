@@ -11,7 +11,7 @@ import rmg.workflow.model.entity.*;
 import rmg.workflow.repository.*;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,14 +32,14 @@ public class CommonUtil {
 
     public void preparedProcessInfo(Requests request, Task task) throws NoDataFoundException {
         ProcessInfo processInfo = new ProcessInfo();
-        processInfo.setRequestId(request.getId());
+        processInfo.setRequestId(request.getRequestId());
         processInfo.setTaskId(task.getId());
         processInfo.setAssigneeUserId(findUserIdByRoleCode(task.getAssignee()));
         processInfo.setProcessInstance(task.getProcessInstanceId());
         processInfoRepository.save(processInfo);
     }
 
-    public void preparedRequestHistory(Long requestId, Long assigneeUserId, String notes, Long stepId, String actionCode) {
+    public void preparedRequestHistory(UUID requestId, UUID assigneeUserId, String notes, UUID stepId, String actionCode) {
         RequestHistory requestHistory = new RequestHistory();
         requestHistory.setRequestId(requestId);
         requestHistory.setAssigneeUserId(assigneeUserId);
@@ -49,7 +49,7 @@ public class CommonUtil {
         requestHistoryRepository.save(requestHistory);
     }
 
-    public Long findStepAction(Long stepId, String actionCode) {
+    public UUID findStepAction(UUID stepId, String actionCode) {
         ServiceStepActions serviceStepActions = serviceStepActionsRepository.findByStepIdAndActionCode(stepId, actionCode);
         if (serviceStepActions != null) {
             return serviceStepActions.getId();
@@ -58,7 +58,7 @@ public class CommonUtil {
     }
 
 
-    public void updateRequestSla(CompleteDto completeDto, Long assigneeUser) {
+    public void updateRequestSla(CompleteDto completeDto, UUID assigneeUser) {
         RequestSla requestSla = requestSlaRepository.findByRequestIdAndAssigneeUserAndTaskIdAndActionDateIsNull(completeDto.getRequestId(), assigneeUser, completeDto.getTaskId());
         requestSla.setActionUser(completeDto.getUserId());
         requestSla.setActionDate(LocalDateTime.now());
@@ -66,7 +66,7 @@ public class CommonUtil {
 
     }
 
-    public void addNewRequestSla(Long requestId, String taskId, Long assigneeUser) {
+    public void addNewRequestSla(UUID requestId, String taskId, UUID assigneeUser) {
         RequestSla requestSla = new RequestSla();
         requestSla.setRequestId(requestId);
         requestSla.setAssignDate(LocalDateTime.now());
@@ -76,15 +76,15 @@ public class CommonUtil {
     }
 
 
-    public String findRoleCodeByUserId(Long userId) throws NoDataFoundException {
-        Optional<Users> optionalUsers = usersRepository.findById(userId);
-        if (optionalUsers.isEmpty()) {
+    public String findRoleCodeByUserId(UUID userId) throws NoDataFoundException {
+        Users user = usersRepository.findUserById(userId);
+        if (user == null) {
             throw new NoDataFoundException("USER_NOT_FOUND");
         }
-        return optionalUsers.get().getRoleCode();
+        return user.getRoleCode();
     }
 
-    public Long findUserIdByRoleCode(String roleCode) throws NoDataFoundException {
+    public UUID findUserIdByRoleCode(String roleCode) throws NoDataFoundException {
         Users user = usersRepository.findByRoleCode(roleCode);
         if (user == null) {
             throw new NoDataFoundException("USER_NOT_FOUND");

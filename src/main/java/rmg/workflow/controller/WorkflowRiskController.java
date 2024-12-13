@@ -12,6 +12,8 @@ import rmg.workflow.model.dto.ResponseDto;
 import rmg.workflow.model.dto.RiskDto;
 import rmg.workflow.service.WorkflowRiskService;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/risk")
@@ -46,7 +48,7 @@ public class WorkflowRiskController {
 
 
     @GetMapping("/get-risk-details/{riskId}")
-    public ResponseEntity<ResponseDto> getRiskDetails(@PathVariable Long riskId) throws NoDataFoundException {
+    public ResponseEntity<ResponseDto> getRiskDetails(@PathVariable UUID riskId) throws NoDataFoundException {
         return ResponseEntity.ok(new ResponseDto(true, null,
                 workflowRiskService.getRiskDetails(riskId),
                 HttpStatus.OK.value()));

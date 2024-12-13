@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UsersDto {
 
-    private String userNameAr;
-    private String userNameEn;
+    private String name;
+    private String normalizedUserNames;
     private String roleCode;
 }

@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -14,19 +16,21 @@ import java.io.Serializable;
 @Setter
 public class ProcessInfo implements Serializable {
 
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @UuidGenerator()
+    private UUID id;
 
     @Column(name = "task_id")
     private String taskId;
 
     @Column(name = "request_id")
-    private Long requestId;
+    private UUID requestId;
 
     @Column(name = "assignee_user")
-    private Long assigneeUserId;
+    private UUID assigneeUserId;
 
     @JoinColumn(name = "assignee_user", insertable = false, updatable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

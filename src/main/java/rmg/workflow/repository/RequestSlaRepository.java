@@ -4,8 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import rmg.workflow.model.entity.RequestSla;
 
-@Repository
-public interface RequestSlaRepository extends JpaRepository<RequestSla, Long> {
+import java.util.UUID;
 
-    RequestSla findByRequestIdAndAssigneeUserAndTaskIdAndActionDateIsNull(Long requestId, Long assigneeUser, String taskId);
+@Repository
+public interface RequestSlaRepository extends JpaRepository<RequestSla, UUID> {
+
+    RequestSla findByRequestIdAndAssigneeUserAndTaskIdAndActionDateIsNull(UUID requestId, UUID assigneeUser, String taskId);
 }

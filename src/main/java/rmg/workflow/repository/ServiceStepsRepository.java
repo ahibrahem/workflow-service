@@ -5,8 +5,10 @@ import org.springframework.stereotype.Repository;
 import rmg.workflow.model.entity.ServiceSteps;
 import rmg.workflow.model.entity.Services;
 
+import java.util.UUID;
+
 @Repository
-public interface ServiceStepsRepository extends JpaRepository<ServiceSteps, Long> {
+public interface ServiceStepsRepository extends JpaRepository<ServiceSteps, UUID> {
 
     ServiceSteps findServiceStepsByStepCode(String serviceStepCode);
 }

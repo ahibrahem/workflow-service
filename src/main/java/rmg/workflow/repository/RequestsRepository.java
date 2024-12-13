@@ -8,15 +8,17 @@ import rmg.workflow.model.entity.Requests;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface RequestsRepository extends JpaRepository<Requests, Long> {
+public interface RequestsRepository extends JpaRepository<Requests, UUID> {
 
-    Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdIsNull(Long riskId, Long riskOwnerId, Long riskManagerId);
+    Requests findRequestByRequestId(UUID requestId);
+    Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdIsNull(UUID riskId, UUID riskOwnerId, UUID riskManagerId);
 
-    Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdAndPlanIdIsNotNull(Long riskId, Long riskOwnerId, Long riskManagerId, Long planId);
+    Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdAndPlanIdIsNotNull(UUID riskId, UUID riskOwnerId, UUID riskManagerId, UUID planId);
 
-    List<Requests> findByRiskId(Long riskId);
+    List<Requests> findByRiskId(UUID riskId);
 
     @Query(
             value = "select req.* " +
@@ -28,5 +30,5 @@ public interface RequestsRepository extends JpaRepository<Requests, Long> {
     )
     List<Requests> findLateRequests();
 
-    List<Requests> findByRiskIdAndPlanId(Long riskId, Long planId);
+    List<Requests> findByRiskIdAndPlanId(UUID riskId, UUID planId);
 }

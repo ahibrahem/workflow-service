@@ -9,16 +9,17 @@ import lombok.Setter;
 import rmg.workflow.model.entity.ServiceStepActions;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class ServiceStepsDto {
 
-    private Long id;
+    private UUID id;
     private String stepNameAr;
     private String stepNameEn;
-    private Long serviceId;
+    private UUID serviceId;
     private String stepCode;
     private List<ServiceStepActionsDto> serviceStepActionList;
 }

@@ -5,14 +5,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class RequestDto {
 
-    private Long id;
-    private Long riskId;
+    private UUID requestId;
+    private UUID riskId;
     private String requestNo;
     private List<processInfoDto> processInfoList;
     private List<RequestHistoryDto> requestHistoryList;

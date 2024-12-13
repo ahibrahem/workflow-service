@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -16,9 +18,10 @@ import java.io.Serializable;
 public class Services implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @UuidGenerator()
+    private UUID id;
     @Column(name = "service_name_ar")
     private String serviceNameAr;
     @Column(name = "service_name_en")

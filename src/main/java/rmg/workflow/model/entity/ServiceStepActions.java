@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -15,16 +17,17 @@ import java.io.Serializable;
 public class ServiceStepActions implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @UuidGenerator()
+    private UUID id;
     @Column(name = "step_id")
-    private Long stepId;
+    private UUID stepId;
     @Column(name = "action_name_ar")
     private String actionNameAr;
     @Column(name = "action_name_en")
     private String actionNameEn;
     @Column(name = "action_code")
     private String actionCode;
-    
+
 }

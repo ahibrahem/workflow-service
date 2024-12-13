@@ -26,6 +26,7 @@ import org.camunda.bpm.engine.variable.Variables;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +64,7 @@ public class CamundaUtil {
     }
 
 
-    public Requests initRequestObject(String serviceCode, String serviceStepCode, Long id) {
+    public Requests initRequestObject(String serviceCode, String serviceStepCode, UUID id) {
         Services services = servicesRepository.findServicesByServiceCode(serviceCode);
         ServiceSteps serviceStep = serviceStepsRepository.findServiceStepsByStepCode(serviceStepCode);
 
@@ -101,7 +102,7 @@ public class CamundaUtil {
         }
     }
 
-    public void validateTaskIdAndAssignee(ProcessInfo processInfo, Long currentRole) throws NoDataFoundException {
+    public void validateTaskIdAndAssignee(ProcessInfo processInfo, UUID currentRole) throws NoDataFoundException {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         Task task = processEngine.getTaskService().createTaskQuery().taskId(processInfo.getTaskId()).active().singleResult();
         if (task == null || !processInfo.getAssigneeUserId().equals(currentRole)) {
@@ -110,11 +111,10 @@ public class CamundaUtil {
     }
 
     public Requests validateRequestDataForComplete(List<String> endingStepList, CompleteDto completeDto) throws NoDataFoundException {
-        Optional<Requests> requestsOptional = requestsRepository.findById(completeDto.getRequestId());
-        if (requestsOptional.isEmpty()) {
+        Requests request = requestsRepository.findRequestByRequestId(completeDto.getRequestId());
+        if (request == null) {
             throw new NoDataFoundException("REQUEST_NOT_FOUND");
         }
-        Requests request = requestsOptional.get();
 
         if (!completeDto.getTaskId().equals(request.getProcessInfoList().get(0).getTaskId())) {
             throw new NoDataFoundException("INVALID_REQUEST_ID_OR_TASK_ID");
