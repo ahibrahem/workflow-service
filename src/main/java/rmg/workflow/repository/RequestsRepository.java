@@ -14,9 +14,12 @@ import java.util.UUID;
 public interface RequestsRepository extends JpaRepository<Requests, UUID> {
 
     Requests findRequestByRequestId(UUID requestId);
+
     Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdIsNull(UUID riskId, UUID riskOwnerId, UUID riskManagerId);
 
     Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdAndPlanIdIsNotNull(UUID riskId, UUID riskOwnerId, UUID riskManagerId, UUID planId);
+
+    List<Requests> findByRiskIdAndPlanIdIsNull(UUID riskId);
 
     List<Requests> findByRiskId(UUID riskId);
 

@@ -97,16 +97,24 @@ public class WorkflowRiskService {
         request.setServiceStepId(serviceStepsRepository.findServiceStepsByStepCode(nextStep).getId());
 
         if (completeDto.getAction().equals("TRANSFER")) {
-            request.setRiskManagerId(completeDto.getNewRiskManagerId());
-            request.setRiskOwnerId(completeDto.getNewRiskManagerId());
+            if (completeDto.getNewRiskManagerId() != null) {
+                request.setRiskManagerId(completeDto.getNewRiskManagerId());
+            }
+            if (completeDto.getNewRiskOwnerId() != null) {
+                request.setRiskOwnerId(completeDto.getNewRiskOwnerId());
+            }
         }
         requestsRepository.save(request);
 
         Map<String, Object> vars = new HashMap<>();
         vars.put(ConstantString.ACTION, completeDto.getAction());
         if (completeDto.getAction().equals("TRANSFER")) {
-            vars.put(ConstantString.MANAGER, commonUtil.findRoleCodeByUserId(completeDto.getNewRiskManagerId()));
-            vars.put(ConstantString.OWNER, commonUtil.findRoleCodeByUserId(completeDto.getNewRiskOwnerId()));
+            if (completeDto.getNewRiskManagerId() != null) {
+                vars.put(ConstantString.MANAGER, commonUtil.findRoleCodeByUserId(completeDto.getNewRiskManagerId()));
+            }
+            if (completeDto.getNewRiskOwnerId() != null) {
+                vars.put(ConstantString.OWNER, commonUtil.findRoleCodeByUserId(completeDto.getNewRiskOwnerId()));
+            }
         }
 
         ProcessInfo processInfo = request.getProcessInfoList().get(0);
@@ -126,7 +134,7 @@ public class WorkflowRiskService {
     }
 
     public RequestDetailsDto getRiskDetails(UUID riskId) throws NoDataFoundException {
-        List<Requests> requestList = requestsRepository.findByRiskId(riskId);
+        List<Requests> requestList = requestsRepository.findByRiskIdAndPlanIdIsNull(riskId);
         if (requestList == null || requestList.isEmpty()) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }

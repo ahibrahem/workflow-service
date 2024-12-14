@@ -95,7 +95,7 @@ public class CommonUtil {
 
     public void validateTransferActionNewRole(CompleteDto completeDto) throws AppIllegalStateException {
         if (completeDto.getAction().equals("TRANSFER")
-                && (completeDto.getNewRiskManagerId() == null || completeDto.getNewRiskOwnerId() == null)) {
+                && completeDto.getNewRiskManagerId() == null && completeDto.getNewRiskOwnerId() == null) {
             throw new AppIllegalStateException("NEW_MANAGER_OR_NEW_OWNER_CANT_NULL");
         }
     }
