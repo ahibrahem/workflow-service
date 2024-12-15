@@ -36,7 +36,4 @@ public class Users implements Serializable {
     @Column(name = "Email")
     private String email;
 
-    @Column(name = "RoleCode")
-    private String roleCode;
-
 }

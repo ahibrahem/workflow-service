@@ -9,7 +9,6 @@ import org.camunda.bpm.engine.ProcessEngines;
 import org.camunda.bpm.engine.runtime.ProcessInstanceWithVariables;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.stereotype.Service;
-import rmg.workflow.enumeration.CamundaProcess;
 import rmg.workflow.exceptions.AppIllegalStateException;
 import rmg.workflow.exceptions.NoDataFoundException;
 import rmg.workflow.model.dto.CompleteDto;
@@ -25,7 +24,6 @@ import org.camunda.bpm.engine.variable.Variables;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,7 +33,6 @@ public class CamundaUtil {
     private final ServicesRepository servicesRepository;
     private final ServiceStepsRepository serviceStepsRepository;
     private final RequestsRepository requestsRepository;
-    private final CommonUtil commonUtil;
 
     public String getProcessNextStep(String currentStep, String currentAction, String dmnTableName) throws NoDataFoundException {
 
@@ -98,7 +95,7 @@ public class CamundaUtil {
             processInfo.setAssigneeUser(null);
         } else {
             processInfo.setTaskId(task.getId());
-            processInfo.setAssigneeUserId(commonUtil.findUserIdByRoleCode(task.getAssignee()));
+            processInfo.setAssigneeUserId(UUID.fromString(task.getAssignee()));
         }
     }
 

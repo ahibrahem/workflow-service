@@ -34,7 +34,7 @@ public class WorkflowRiskPlanService {
     private final CommonUtil commonUtil;
     private final ProcessInfoRepository processInfoRepository;
 
-    public String startRiskPlanProcess(RiskDto riskDto) throws NoDataFoundException, AppIllegalStateException {
+    public String startRiskPlanProcess(RiskDto riskDto) throws  AppIllegalStateException {
 
         if (riskDto.getRiskId() == null || riskDto.getPlanId() == null) {
             throw new AppIllegalStateException("RISK_ID_OR_PLAN_ID_CANT_BE_NULL");
@@ -46,27 +46,26 @@ public class WorkflowRiskPlanService {
         Requests savedRequest = requestsRepository.save(request);
 
         Map<String, Object> processVars = new HashMap<>();
-        processVars.put(ConstantString.MANAGER, commonUtil.findRoleCodeByUserId(riskDto.getRiskManagerId()));
-        processVars.put(ConstantString.OWNER, commonUtil.findRoleCodeByUserId(riskDto.getRiskOwnerId()));
+        processVars.put(ConstantString.MANAGER, riskDto.getRiskManagerId());
+        processVars.put(ConstantString.OWNER, riskDto.getRiskOwnerId());
         Task task = camundaUtil.startProcess(processVars, CamundaProcess.RISK_PLAN.getValue());
 
         ServiceSteps serviceStep = serviceStepsRepository.findServiceStepsByStepCode(CamundaSteps.INIT_REDUCTION_PLAN.getValue());
         commonUtil.preparedProcessInfo(savedRequest, task);
         commonUtil.preparedRequestHistory(savedRequest.getRequestId(), null, riskDto.getNotes(), serviceStep.getId(), CamundaSteps.INIT_REDUCTION_PLAN.getValue());
-        UUID userId = commonUtil.findUserIdByRoleCode(task.getAssignee());
-        commonUtil.addNewRequestSla(savedRequest.getRequestId(), task.getId(), userId);
+        commonUtil.addNewRequestSla(savedRequest.getRequestId(), task.getId(), UUID.fromString(task.getAssignee()));
         return "process started";
     }
 
     private void validateIfRiskRequestExist(RiskDto riskDto) throws AppIllegalStateException {
-        List<Requests> requestList = requestsRepository.findByRiskIdAndPlanId(riskDto.getRiskId(),riskDto.getPlanId());
-        if (requestList != null && !requestList.isEmpty()) {
+        Requests request = requestsRepository.findByRiskIdAndPlanId(riskDto.getRiskId(),riskDto.getPlanId());
+        if (request != null) {
             throw new AppIllegalStateException("RISK_ID_AND_PLAN_ID_ALREADY_EXIST");
         }
     }
 
     public Object getRiskPlanProcess(RiskDto riskDto) throws NoDataFoundException {
-        Requests request = requestsRepository.findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdAndPlanIdIsNotNull(riskDto.getRiskId(), riskDto.getRiskOwnerId(), riskDto.getRiskManagerId(), riskDto.getPlanId());
+        Requests request = requestsRepository.findByRiskIdAndPlanId(riskDto.getRiskId(), riskDto.getPlanId());
         if (request == null) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }

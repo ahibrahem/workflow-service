@@ -11,5 +11,4 @@ public class UsersDto {
 
     private String name;
     private String normalizedUserNames;
-    private String roleCode;
 }

@@ -15,11 +15,9 @@ public interface RequestsRepository extends JpaRepository<Requests, UUID> {
 
     Requests findRequestByRequestId(UUID requestId);
 
-    Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdIsNull(UUID riskId, UUID riskOwnerId, UUID riskManagerId);
+    Requests findByRiskIdAndPlanIdIsNull(UUID riskId);
 
-    Requests findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdAndPlanIdIsNotNull(UUID riskId, UUID riskOwnerId, UUID riskManagerId, UUID planId);
-
-    List<Requests> findByRiskIdAndPlanIdIsNull(UUID riskId);
+    Requests findByRiskIdAndPlanId(UUID riskId, UUID planId);
 
     List<Requests> findByRiskId(UUID riskId);
 
@@ -33,5 +31,4 @@ public interface RequestsRepository extends JpaRepository<Requests, UUID> {
     )
     List<Requests> findLateRequests();
 
-    List<Requests> findByRiskIdAndPlanId(UUID riskId, UUID planId);
 }

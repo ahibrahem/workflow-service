@@ -48,15 +48,14 @@ public class WorkflowRiskService {
         Requests savedRequest = requestsRepository.save(request);
 
         Map<String, Object> processVars = new HashMap<>();
-        processVars.put(ConstantString.MANAGER, commonUtil.findRoleCodeByUserId(riskDto.getRiskManagerId()));
-        processVars.put(ConstantString.OWNER, commonUtil.findRoleCodeByUserId(riskDto.getRiskOwnerId()));
+        processVars.put(ConstantString.MANAGER, riskDto.getRiskManagerId().toString());
+        processVars.put(ConstantString.OWNER, riskDto.getRiskOwnerId().toString());
         Task task = camundaUtil.startProcess(processVars, CamundaProcess.RISK.getValue());
 
         ServiceSteps serviceStep = serviceStepsRepository.findServiceStepsByStepCode(CamundaSteps.INIT_RISK.getValue());
         commonUtil.preparedProcessInfo(savedRequest, task);
         commonUtil.preparedRequestHistory(savedRequest.getRequestId(), null, riskDto.getNotes(), serviceStep.getId(), CamundaSteps.INIT_RISK.getValue());
-        UUID userId = commonUtil.findUserIdByRoleCode(task.getAssignee());
-        commonUtil.addNewRequestSla(savedRequest.getRequestId(), task.getId(), userId);
+        commonUtil.addNewRequestSla(savedRequest.getRequestId(), task.getId(), UUID.fromString(task.getAssignee()));
         return "process started";
     }
 
@@ -70,7 +69,7 @@ public class WorkflowRiskService {
 
     public RequestDto getRiskProcess(RiskDto riskDto) throws NoDataFoundException {
 
-        Requests request = requestsRepository.findByRiskIdAndRiskOwnerIdAndRiskManagerIdAndPlanIdIsNull(riskDto.getRiskId(), riskDto.getRiskOwnerId(), riskDto.getRiskManagerId());
+        Requests request = requestsRepository.findByRiskIdAndPlanIdIsNull(riskDto.getRiskId());
         if (request == null) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }
@@ -110,10 +109,10 @@ public class WorkflowRiskService {
         vars.put(ConstantString.ACTION, completeDto.getAction());
         if (completeDto.getAction().equals("TRANSFER")) {
             if (completeDto.getNewRiskManagerId() != null) {
-                vars.put(ConstantString.MANAGER, commonUtil.findRoleCodeByUserId(completeDto.getNewRiskManagerId()));
+                vars.put(ConstantString.MANAGER, completeDto.getNewRiskManagerId().toString());
             }
             if (completeDto.getNewRiskOwnerId() != null) {
-                vars.put(ConstantString.OWNER, commonUtil.findRoleCodeByUserId(completeDto.getNewRiskOwnerId()));
+                vars.put(ConstantString.OWNER, completeDto.getNewRiskOwnerId().toString());
             }
         }
 
@@ -134,10 +133,10 @@ public class WorkflowRiskService {
     }
 
     public RequestDetailsDto getRiskDetails(UUID riskId) throws NoDataFoundException {
-        List<Requests> requestList = requestsRepository.findByRiskIdAndPlanIdIsNull(riskId);
-        if (requestList == null || requestList.isEmpty()) {
+        Requests request = requestsRepository.findByRiskIdAndPlanIdIsNull(riskId);
+        if (request == null) {
             throw new NoDataFoundException(ConstantString.NO_DATA_FOUND);
         }
-        return requestMapper.toRequestDetailsDto(requestList.get(0));
+        return requestMapper.toRequestDetailsDto(request);
     }
 }

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.stereotype.Service;
 import rmg.workflow.exceptions.AppIllegalStateException;
-import rmg.workflow.exceptions.NoDataFoundException;
 import rmg.workflow.model.dto.CompleteDto;
 import rmg.workflow.model.dto.RiskDto;
 import rmg.workflow.model.entity.*;
@@ -21,7 +20,6 @@ public class CommonUtil {
     private final RequestHistoryRepository requestHistoryRepository;
     private final ServiceStepActionsRepository serviceStepActionsRepository;
     private final RequestSlaRepository requestSlaRepository;
-    private final UsersRepository usersRepository;
 
     public void preparedRequestData(Requests request, RiskDto riskDto) {
         request.setRiskId(riskDto.getRiskId());
@@ -30,11 +28,11 @@ public class CommonUtil {
         request.setPlanId(riskDto.getPlanId());
     }
 
-    public void preparedProcessInfo(Requests request, Task task) throws NoDataFoundException {
+    public void preparedProcessInfo(Requests request, Task task) {
         ProcessInfo processInfo = new ProcessInfo();
         processInfo.setRequestId(request.getRequestId());
         processInfo.setTaskId(task.getId());
-        processInfo.setAssigneeUserId(findUserIdByRoleCode(task.getAssignee()));
+        processInfo.setAssigneeUserId(UUID.fromString(task.getAssignee()));
         processInfo.setProcessInstance(task.getProcessInstanceId());
         processInfoRepository.save(processInfo);
     }
@@ -63,7 +61,6 @@ public class CommonUtil {
         requestSla.setActionUser(completeDto.getUserId());
         requestSla.setActionDate(LocalDateTime.now());
         requestSlaRepository.save(requestSla);
-
     }
 
     public void addNewRequestSla(UUID requestId, String taskId, UUID assigneeUser) {
@@ -73,23 +70,6 @@ public class CommonUtil {
         requestSla.setTaskId(taskId);
         requestSla.setAssigneeUser(assigneeUser);
         requestSlaRepository.save(requestSla);
-    }
-
-
-    public String findRoleCodeByUserId(UUID userId) throws NoDataFoundException {
-        Users user = usersRepository.findUserById(userId);
-        if (user == null) {
-            throw new NoDataFoundException("USER_NOT_FOUND");
-        }
-        return user.getRoleCode();
-    }
-
-    public UUID findUserIdByRoleCode(String roleCode) throws NoDataFoundException {
-        Users user = usersRepository.findByRoleCode(roleCode);
-        if (user == null) {
-            throw new NoDataFoundException("USER_NOT_FOUND");
-        }
-        return user.getId();
     }
 
 
