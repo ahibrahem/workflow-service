@@ -22,7 +22,7 @@ public class WorkflowRiskPlanController {
     private final WorkflowRiskPlanService workflowRiskPlanService;
 
     @PostMapping("/start-risk-plan-process")
-    public ResponseEntity<ResponseDto> startRiskProcess(@RequestBody RiskDto riskDto) throws AppIllegalStateException, NoDataFoundException {
+    public ResponseEntity<ResponseDto> startRiskPlanProcess(@RequestBody RiskDto riskDto) throws AppIllegalStateException, NoDataFoundException {
 
         return ResponseEntity.ok(new ResponseDto(true, null,
                 workflowRiskPlanService.startRiskPlanProcess(riskDto),
@@ -31,7 +31,7 @@ public class WorkflowRiskPlanController {
 
 
     @PostMapping("/get-risk-plan-process")
-    public ResponseEntity<ResponseDto> getRiskProcess(@RequestBody RiskDto riskDto) throws NoDataFoundException {
+    public ResponseEntity<ResponseDto> getRiskPlanProcess(@RequestBody RiskDto riskDto) throws NoDataFoundException {
         return ResponseEntity.ok(new ResponseDto(true, null,
                 workflowRiskPlanService.getRiskPlanProcess(riskDto),
                 HttpStatus.OK.value()));
@@ -39,7 +39,7 @@ public class WorkflowRiskPlanController {
 
 
     @PostMapping("/complete-risk-plan-process")
-    public ResponseEntity<ResponseDto> completeRiskProcess(@RequestBody CompleteDto completeDto) throws AppIllegalStateException, NoDataFoundException {
+    public ResponseEntity<ResponseDto> completeRiskPlanProcess(@RequestBody CompleteDto completeDto) throws AppIllegalStateException, NoDataFoundException {
         return ResponseEntity.ok(new ResponseDto(true, null,
                 workflowRiskPlanService.completeRiskPlanProcess(completeDto),
                 HttpStatus.OK.value()));
