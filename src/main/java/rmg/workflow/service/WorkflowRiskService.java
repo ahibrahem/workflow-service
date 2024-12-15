@@ -38,7 +38,7 @@ public class WorkflowRiskService {
 
 
     @Transactional(rollbackFor = Exception.class)
-    public String startProcess(RiskDto riskDto) throws AppIllegalStateException, NoDataFoundException {
+    public String startProcess(RiskDto riskDto) throws AppIllegalStateException {
 
         validateIfRiskRequestExist(riskDto.getRiskId());
 

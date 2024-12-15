@@ -83,7 +83,7 @@ public class CamundaUtil {
     public void completeProcessTask(String taskId, ProcessInfo processInfo
             , List<String> endingStepList
             , Map<String, Object> vars
-            , String nextStepCode) throws NoDataFoundException {
+            , String nextStepCode)  {
 
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         processEngine.getTaskService().complete(taskId, vars);

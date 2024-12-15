@@ -23,7 +23,7 @@ public class WorkflowRiskController {
     private final WorkflowRiskService workflowRiskService;
 
     @PostMapping("/start-risk-process")
-    public ResponseEntity<ResponseDto> startRiskProcess(@RequestBody RiskDto riskDto) throws AppIllegalStateException, NoDataFoundException {
+    public ResponseEntity<ResponseDto> startRiskProcess(@RequestBody RiskDto riskDto) throws AppIllegalStateException {
 
         return ResponseEntity.ok(new ResponseDto(true, null,
                 workflowRiskService.startProcess(riskDto),
